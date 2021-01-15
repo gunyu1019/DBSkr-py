@@ -10,10 +10,10 @@ setup(
     author_email='gunyu1019@gmail.com',
     description='Koreanbots와 top.gg를 위한 비공식 파이썬 API 레퍼입니다.',
     python_requires='>=3.6',
-    long_description=open('README.md').read(),
+    long_description=open('README.md', encoding='UTF-8').read(),
     long_description_content_type='text/markdown',
     include_package_data=True,
-    install_requires=open('requirements.txt').read(),
+    install_requires=open('requirements.txt', encoding='UTF-8').read(),
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.6',
