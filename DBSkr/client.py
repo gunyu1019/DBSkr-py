@@ -108,7 +108,7 @@ class client:
             .errors.HTTPException
                 알수없는 HTTP 에러가 발생했습니다, 주로 400에 발생합니다.
         """
-        log.info("서버 포스트 요청이 들어왔습니다.")
+        log.debug("서버 포스트 요청이 들어왔습니다.")
         koreanbots = self.koreanbots
         topgg = self.topgg
         if not koreanbots and not topgg:
@@ -146,7 +146,7 @@ class client:
             .errors.HTTPException
                 알수없는 HTTP 에러가 발생했습니다, 주로 400에 발생합니다.
         """
-        log.info(f"(ID: {user})가 top.gg 혹은 koreanbots에 투표를 했는지 확인 요청이 들어왔습니다.")
+        log.debug(f"(ID: {user})가 top.gg 혹은 koreanbots에 투표를 했는지 확인 요청이 들어왔습니다.")
         Data = await self.http.getVote(user)
         return typeSite(Data)
 
@@ -172,7 +172,7 @@ class client:
             .errors.HTTPException
                 알수없는 HTTP 에러가 발생했습니다, 주로 400에 발생합니다.
         """
-        log.info(f"최근 12시간 내에 투표한 유저들 목록표에 대해 요청이 들어왔습니다.")
+        log.debug(f"최근 12시간 내에 투표한 유저들 목록표에 대해 요청이 들어왔습니다.")
         Data = await self.http.getVotes()
         return [Votes(_) for _ in Data]
 
@@ -205,7 +205,7 @@ class client:
             .errors.HTTPException
                 알수없는 HTTP 에러가 발생했습니다, 주로 400에 발생합니다.
         """
-        log.info(f"(ID: {id})에 대한 디스코드봇 검색결과 요청이 들어왔습니다.")
+        log.debug(f"(ID: {id})에 대한 디스코드봇 검색결과 요청이 들어왔습니다.")
         if id == None:
             id = self.bot.user.id
         Data = await self.http.getBot(id)
@@ -239,7 +239,7 @@ class client:
             .errors.HTTPException
                 알수없는 HTTP 에러가 발생했습니다, 주로 400에 발생합니다.
         """
-        log.info("디스코드봇 목록 검색결과 요청이 들어왔습니다.")
+        log.debug("디스코드봇 목록 검색결과 요청이 들어왔습니다.")
         Data = await self.http.getBots(page)
         return typeSite(Data)
 
@@ -270,6 +270,6 @@ class client:
             .errors.HTTPException
                 알수없는 HTTP 에러가 발생했습니다, 주로 400에 발생합니다.
         """
-        log.info(f"(쿼리값: {query})에 대한 디스코드봇 검색결과 요청이 들어왔습니다.")
+        log.debug(f"(쿼리값: {query})에 대한 디스코드봇 검색결과 요청이 들어왔습니다.")
         Data = await self.http.getSearchBot(query)
         return typeSite(Data)

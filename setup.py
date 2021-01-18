@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='DBSKR',
-    version='v1.0',
+    version='v1.0.1',
     packages=['DBSkr'],
     url='https://github.com/gunyu1019/DBSkr-py',
     license='MIT',

@@ -17,10 +17,10 @@ py -3 -m pip install DBSkr
 **Install from source**
 ```
 # Linux/macOS
-python -3 -m pip install git+https://github.com/top-gg/DBL-Python-Library
+python -3 -m pip install git+https://github.com/gunyu1019/DBSkr
 
 # Windows
-py -3 -m pip install git+https://github.com/top-gg/DBL-Python-Library
+py -3 -m pip install git+https://github.com/gunyu1019/DBSkr
 ```
 ## 로깅 (Logging)
 DBSkr은 파이썬의 `logging` 모듈을 사용하여, 오류 및 디버그 정보를 기록합니다.
