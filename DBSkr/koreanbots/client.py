@@ -20,5 +20,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import asyncio
+import aiohttp
 
-from .api import Api
+from .https import HttpClient
+
+
+class Client:
+    def __init__(self, client, token: str, session: aiohttp.ClientSession = None,
+                 loop: asyncio.ProactorEventLoop = None, autopost: bool = True, autopost_time: int = 30):
+        self.token = token
+        self.client = client
+        self.http = HttpClient(token=token, session=session)

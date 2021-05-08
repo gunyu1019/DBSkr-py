@@ -39,7 +39,10 @@ class Api:
         self.sesion.close()
 
     async def requests(self, method: str, path: str, **kwargs):
-        url = "{}/{}{}".format(self.BASE, self.version, path)
+        if self.version is not None:
+            url = "{}{}".format(self.BASE, path)
+        else:
+            url = "{}/{}{}".format(self.BASE, self.version, path)
         headers = {
             'Content-Type': 'application/json',
             'token': self.token
