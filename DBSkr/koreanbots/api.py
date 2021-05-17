@@ -23,6 +23,13 @@ SOFTWARE.
 
 import aiohttp
 import json
+import logging
+
+from datetime import datetime
+
+from .exception import *
+
+log = logging.getLogger(__name__)
 
 
 class Api:
@@ -39,6 +46,7 @@ class Api:
         self.sesion.close()
 
     async def requests(self, method: str, path: str, **kwargs):
+
         if self.version is not None:
             url = "{}{}".format(self.BASE, path)
         else:
@@ -52,12 +60,39 @@ class Api:
         else:
             kwargs['headers'] = headers
 
-        async with self.sesion.request(method, url, **kwargs) as result:
-            if result.content_type == "application/json":
-                data = await result.json()
-            else:
-                fp_data = await result.text()
-                data = json.loads(fp_data)
+        for tries in range(5):
+            async with self.sesion.request(method, url, **kwargs) as response:
+                if response.content_type == "application/json":
+                    data = await response.json()
+                else:
+                    fp_data = await response.text()
+                    data = json.loads(fp_data)
+
+                remain_remaining = response.headers.get('x-ratelimit-remaining')
+                remain_limit = response.headers.get('x-ratelimit-limit')
+                if remain_remaining == 0 or response.status == 429:
+                    _remain_limit = int(response.headers.get('x-ratelimit-reset'))
+                    reset_limit = datetime.fromtimestamp(_remain_limit)
+
+                    retry_after = reset_limit - datetime.now()
+                    log.warning(f"we're now rate limited. retrying after {retry_after.total_seconds()} seconds ({remain_remaining}/{remain_limit})")
+                    continue
+
+                if 200 <= response.status < 300:
+                    return data
+                elif response.status == 400:
+                    raise BadRequests(response, data)
+                elif response.status == 401:
+                    raise Unauthorized(response, data)
+                elif response.status == 403:
+                    raise Forbidden(response, data)
+                elif response.status == 404:
+                    raise NotFound(response, data)
+                elif response.status == 405:
+                    raise MethodNotAllowed(response, data)
+                else:
+                    raise HTTPException(response, data)
+        raise TooManyRequests(response, data)
 
     async def get(self, path: str, **kwargs):
         return await self.requests("GET", path, **kwargs)

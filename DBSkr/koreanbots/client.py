@@ -22,13 +22,47 @@ SOFTWARE.
 """
 import asyncio
 import aiohttp
+import logging
+import discord
 
+from typing import Union
+
+from .models import Stats
 from .https import HttpClient
+from .exception import *
+
+log = logging.getLogger(__name__)
 
 
 class Client:
-    def __init__(self, client, token: str, session: aiohttp.ClientSession = None,
-                 loop: asyncio.ProactorEventLoop = None, autopost: bool = True, autopost_time: int = 30):
+    def __init__(self, bot: discord.client, token: str, session: aiohttp.ClientSession = None,
+                 loop: asyncio.ProactorEventLoop = None, autopost: bool = True, autopost_interval: int = 3600):
         self.token = token
-        self.client = client
+        self.bot = bot
         self.http = HttpClient(token=token, session=session)
+
+        self.autopost = autopost
+        self.autopost_interval: int = autopost_interval
+        self.loop = loop
+        if self.loop is not None:
+            self.loop = self.bot.loop
+
+        if autopost:
+            if self.autopost_interval < 180:
+                raise ClientException("autopost_interval must be greater than or equal to 3 minutes")
+
+            self.autopost_task = self.loop.create_task(self._auto_post())
+
+    async def _auto_post(self):
+        await self.bot.wait_until_ready()
+        while not self.bot.is_closed():
+            await self.stats()
+            await asyncio.sleep(self.autopost_interval)
+
+    def guild_count(self) -> int:
+        return len(self.bot.guilds)
+
+    async def stats(self, guild_count: int = None) -> Stats:
+        if guild_count is None:
+            guild_count = self.guild_count()
+        return await self.http.stats(bot_id=self.bot.id, guild_count=guild_count)

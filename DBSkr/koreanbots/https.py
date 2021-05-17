@@ -24,7 +24,7 @@ SOFTWARE.
 import aiohttp
 
 from .api import Api
-from .models import Bot, Vote, Stats
+from .models import Bot, Vote, Stats, User
 from .enums import WidgetType, WidgetStyle
 from .widget import Widget
 
