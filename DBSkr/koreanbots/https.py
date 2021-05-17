@@ -24,23 +24,25 @@ SOFTWARE.
 import aiohttp
 
 from .api import Api
-from .models import *
-from .enums import WidgetType
+from .models import Bot, Vote, Stats
+from .enums import WidgetType, WidgetStyle
+from .widget import Widget
 
 
 class HttpClient:
-    def __init__(self, token: str, session: aiohttp.ClientSession = None):
+    def __init__(self, token: str = None, session: aiohttp.ClientSession = None):
         self.token = token
         self.requests = Api(token=token, session=session)
+        self.session = session
 
-    async def bots(self, bot_id: int):
+    async def bots(self, bot_id: int) -> Bot:
         path = "/v2/bots/{bot_id}".format(bot_id=bot_id)
 
         self.requests.version = 2
         result = await self.requests.get(path=path)
-        return
+        return Bot(result)
 
-    async def stats(self, bot_id: int, guild_count: int):
+    async def stats(self, bot_id: int, guild_count: int) -> Stats:
         data = {
             "servers": guild_count
         }
@@ -50,31 +52,40 @@ class HttpClient:
         result = await self.requests.post(path=path, data=data)
         return Stats(result)
 
-    async def vote(self, bot_id: int, user_id: int):
+    async def vote(self, bot_id: int, user_id: int) -> Vote:
         data = {
             "userID": str(user_id)
         }
         path = "/v2/bots/{bot_id}/vote".format(bot_id=bot_id)
 
         self.requests.version = 2
-        result = await self.requests.get(path=path, data=data)
+        result = await self.requests.get(path=path, query=data)
         return Vote(result)
 
-    async def widget(self, widget_type: WidgetType, bot_id: int):
+    def widget(self, widget_type: WidgetType, bot_id: int,
+                     style: WidgetStyle = None, scale: float = None, icon: bool = None):
+        query = dict()
         if isinstance(widget_type, WidgetType):
             widget_t = widget_type.value
         else:
             widget_t = widget_type
 
-        path = "/widget/bots/{widget_type}/{bot_id}".format(widget_type=widget_t, bot_id=bot_id)
+        if isinstance(style, WidgetStyle):
+            query['style'] = style.value
+        elif isinstance(style, str):
+            query['style'] = style
 
-        self.requests.version = None
-        result = await self.requests.get(path=path)
-        return
+        if scale is not None:
+            query['scale'] = scale
+        if icon is not None:
+            query['icon'] = icon
+
+        path = "/widget/bots/{widget_type}/{bot_id}".format(widget_type=widget_t, bot_id=bot_id)
+        return Widget(path=path, query=query, session=self.session)
 
     async def users(self, user_id: int):
         path = "/v2/users/{user_id}".format(user_id=user_id)
 
         self.requests.version = 2
         result = await self.requests.get(path=path)
-        return
+        return User(result)

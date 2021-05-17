@@ -8,6 +8,11 @@ class WidgetType(Enum):
     Status = "status"
 
 
+class WidgetStyle(Enum):
+    classic = "classic"
+    flat = "flat"
+
+
 class Category(Enum):
     manage = "관리"
     music = "뮤직"
@@ -52,7 +57,7 @@ class State(Enum):
 
 
 class BotFlag(Enum):
-    official = 1 << 1
+    official = 1 << 0
     verification_bot = 1 << 2
     partner = 1 << 3
     discord_verification_bot = 1 << 4
