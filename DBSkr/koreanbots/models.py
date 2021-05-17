@@ -21,30 +21,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import datetime
-
 
 class BaseKoreanBots:
     def __init__(self, data: dict):
-        self.data = data
+        self.data: dict = data
 
-        self.code = self.data.get("code")
-        self.version = self.data.get("version")
-
-
-class Stats(BaseKoreanBots):
-    def __init__(self, data: dict):
-        super().__init__(data)
-        self.message = data.get("message")
-
-
-class Vote(BaseKoreanBots):
-    def __init__(self, data: dict):
-        self.data = data
-        super().__init__(data)
-
-        data = data.get("data")
-        last_vote = data.get("lastVote")
-        self.voted = data.get("voted")
-        self.last_vote = datetime.datetime.fromtimestamp(last_vote)
-
+        self.code: int = self.data.get("code")
+        self.version: int = self.data.get("version")

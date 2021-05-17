@@ -37,7 +37,7 @@ class HttpClient:
         path = "/v2/bots/{bot_id}".format(bot_id=bot_id)
 
         self.requests.version = 2
-        result = await self.requests.post(path=path)
+        result = await self.requests.get(path=path)
         return
 
     async def stats(self, bot_id: int, guild_count: int):
@@ -57,7 +57,7 @@ class HttpClient:
         path = "/v2/bots/{bot_id}/vote".format(bot_id=bot_id)
 
         self.requests.version = 2
-        result = await self.requests.post(path=path, data=data)
+        result = await self.requests.get(path=path, data=data)
         return Vote(result)
 
     async def widget(self, widget_type: WidgetType, bot_id: int):
@@ -68,13 +68,13 @@ class HttpClient:
 
         path = "/widget/bots/{widget_type}/{bot_id}".format(widget_type=widget_t, bot_id=bot_id)
 
-        self.requests.version = 2
-        result = await self.requests.post(path=path)
+        self.requests.version = None
+        result = await self.requests.get(path=path)
         return
 
     async def users(self, user_id: int):
         path = "/v2/users/{user_id}".format(user_id=user_id)
 
         self.requests.version = 2
-        result = await self.requests.post(path=path)
+        result = await self.requests.get(path=path)
         return
