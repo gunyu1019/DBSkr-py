@@ -22,18 +22,19 @@ SOFTWARE.
 """
 
 import aiohttp
+import asyncio
 import json
 import logging
 
 from datetime import datetime
 
-from .exception import *
+from .errors import *
 
 log = logging.getLogger(__name__)
 
 
 class Api:
-    def __init__(self, token: str, version: int = 2, session: aiohttp.ClientSession = None):
+    def __init__(self, token: str = None, version: int = 2, session: aiohttp.ClientSession = None):
         self.BASE = "https://koreanbots.dev/api"
         self.token = token
         self.version = version
@@ -46,11 +47,10 @@ class Api:
         self.sesion.close()
 
     async def requests(self, method: str, path: str, **kwargs):
-
         if self.version is not None:
             url = "{}{}".format(self.BASE, path)
         else:
-            url = "{}/{}{}".format(self.BASE, self.version, path)
+            url = "{}/v{}{}".format(self.BASE, self.version, path)
         headers = {
             'Content-Type': 'application/json',
             'token': self.token
@@ -67,6 +67,7 @@ class Api:
                 else:
                     fp_data = await response.text()
                     data = json.loads(fp_data)
+                log.debug(f'{method} {url} returned {response.status}')
 
                 remain_remaining = response.headers.get('x-ratelimit-remaining')
                 remain_limit = response.headers.get('x-ratelimit-limit')
@@ -75,7 +76,9 @@ class Api:
                     reset_limit = datetime.fromtimestamp(_remain_limit)
 
                     retry_after = reset_limit - datetime.now()
-                    log.warning(f"we're now rate limited. retrying after {retry_after.total_seconds()} seconds ({remain_remaining}/{remain_limit})")
+                    log.warning(f"Rate limited. Retry in {retry_after.total_seconds()} seconds"
+                                f" (Current: {remain_remaining}/Maximum: {remain_limit}) | Tries: {tries}")
+                    await asyncio.sleep(retry_after.total_seconds())
                     continue
 
                 if 200 <= response.status < 300:

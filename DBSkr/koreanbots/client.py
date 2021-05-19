@@ -25,17 +25,17 @@ import aiohttp
 import logging
 import discord
 
-from typing import Union
-
-from .models import Stats
+from .enums import WidgetType, WidgetStyle
+from .errors import *
 from .https import HttpClient
-from .exception import *
+from .models import Stats, Vote, Bot, User
+from .widget import Widget
 
 log = logging.getLogger(__name__)
 
 
 class Client:
-    def __init__(self, bot: discord.client, token: str, session: aiohttp.ClientSession = None,
+    def __init__(self, bot: discord.client, token: str = None, session: aiohttp.ClientSession = None,
                  loop: asyncio.ProactorEventLoop = None, autopost: bool = True, autopost_interval: int = 3600):
         self.token = token
         self.bot = bot
@@ -56,7 +56,12 @@ class Client:
     async def _auto_post(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
-            await self.stats()
+            try:
+                log.info('Autoposting guild count to koreanbots.')
+                await self.stats()
+            except TooManyRequests:
+                log.warning("Failed autopost guild count to koreanbots. (Too Many Requests(429))")
+                pass
             await asyncio.sleep(self.autopost_interval)
 
     def guild_count(self) -> int:
@@ -66,3 +71,20 @@ class Client:
         if guild_count is None:
             guild_count = self.guild_count()
         return await self.http.stats(bot_id=self.bot.id, guild_count=guild_count)
+
+    async def vote(self, user_id: int) -> Vote:
+        return await self.http.vote(bot_id=self.bot.id, user_id=user_id)
+
+    async def bots(self, bot_id: int = None) -> Bot:
+        if bot_id is None:
+            bot_id = self.bot.id
+        return await self.http.bots(bot_id=bot_id)
+
+    def widget(self, widget_type: WidgetType, bot_id: int = None,
+               style: WidgetStyle = None, scale: float = None, icon: bool = None) -> Widget:
+        if bot_id is None:
+            bot_id = self.bot.id
+        return self.http.widget(widget_type=widget_type, bot_id=bot_id, style=style, scale=scale, icon=icon)
+
+    async def users(self, user_id: int) -> User:
+        return await self.http.users(user_id=user_id)

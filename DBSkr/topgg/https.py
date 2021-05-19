@@ -21,13 +21,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from ..assets import Assets
+import aiohttp
+
+from .api import Api
 
 
-class Widget(Assets):
-    def __init__(self, path: str, query: dict, session):
-        self.path = path
-        self.query = query
+class HttpClient:
+    def __init__(self, token: str, session: aiohttp.ClientSession = None):
+        self.token = token
+        self.requests = Api(token=token, session=session)
+        self.session = session
 
-        self.BASE = "https://beta.koreanbots.dev/api"
-        super().__init__(self, support_format=['svg'], session=session)
+    async def bots(self, bot_id: int):
+        path = "/bots/{bot_id}".format(bot_id=bot_id)
+
+        result = await self.requests.get(path=path)
+        return

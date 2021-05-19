@@ -36,7 +36,7 @@ class HttpClient:
         self.session = session
 
     async def bots(self, bot_id: int) -> Bot:
-        path = "/v2/bots/{bot_id}".format(bot_id=bot_id)
+        path = "/bots/{bot_id}".format(bot_id=bot_id)
 
         self.requests.version = 2
         result = await self.requests.get(path=path)
@@ -46,7 +46,7 @@ class HttpClient:
         data = {
             "servers": guild_count
         }
-        path = "/v2/bots/{bot_id}/stats".format(bot_id=bot_id)
+        path = "/bots/{bot_id}/stats".format(bot_id=bot_id)
 
         self.requests.version = 2
         result = await self.requests.post(path=path, data=data)
@@ -56,14 +56,14 @@ class HttpClient:
         data = {
             "userID": str(user_id)
         }
-        path = "/v2/bots/{bot_id}/vote".format(bot_id=bot_id)
+        path = "/bots/{bot_id}/vote".format(bot_id=bot_id)
 
         self.requests.version = 2
         result = await self.requests.get(path=path, query=data)
         return Vote(result)
 
     def widget(self, widget_type: WidgetType, bot_id: int,
-                     style: WidgetStyle = None, scale: float = None, icon: bool = None):
+                     style: WidgetStyle = None, scale: float = None, icon: bool = None) -> Widget:
         query = dict()
         if isinstance(widget_type, WidgetType):
             widget_t = widget_type.value
@@ -83,8 +83,8 @@ class HttpClient:
         path = "/widget/bots/{widget_type}/{bot_id}".format(widget_type=widget_t, bot_id=bot_id)
         return Widget(path=path, query=query, session=self.session)
 
-    async def users(self, user_id: int):
-        path = "/v2/users/{user_id}".format(user_id=user_id)
+    async def users(self, user_id: int) -> User:
+        path = "/users/{user_id}".format(user_id=user_id)
 
         self.requests.version = 2
         result = await self.requests.get(path=path)
