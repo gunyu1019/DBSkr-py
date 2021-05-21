@@ -37,7 +37,7 @@ class WidgetStyle(Enum):
 
 
 class Category(Enum):
-    manage = "관리"
+    moderation = "관리"
     music = "뮤직"
     stats = "전적"
     game = "게임"

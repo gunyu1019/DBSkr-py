@@ -88,3 +88,43 @@ class Search:
 
     def __len__(self):
         return len(self.results)
+
+
+class Users:
+    def __init__(self, data):
+        self.id: str = data.get("id")
+        self.name: str = data.get("username")
+        self.discriminator: str = data.get("discriminator")
+        self.avatar: DiscordAvatar = DiscordAvatar(user_id=self.id, avatar=data.get("defAvatar"))
+
+        # Optional
+        self.bio: Optional[str] = data.get("bio")
+        self.banner: Optional[str] = data.get("banner")
+        self.avatar_hash: Optional[str] = data.get("avatar")
+        self.color: Optional[str] = data.get("color")
+
+        # Boolean Data
+        self.staff: bool = data.get("admin")
+        self.web_mod: bool = data.get("webMod")
+        self.mod: bool = data.get("mod")
+        self.certified: bool = data.get("certifiedDev")
+        self.supporter: bool = data.get("supporter")
+
+        # Social Data
+        social = data.get("social", dict())
+        self.youtube: Optional[str] = social.get("youtube")
+        self.reddit: Optional[str] = social.get("reddit")
+        self.twitter: Optional[str] = social.get("twitter")
+        self.instagram: Optional[str] = social.get("instagram")
+        self.github: Optional[str] = social.get("github")
+
+
+class VotedUser:
+    def __init__(self, data):
+        self.name = data.get("username")
+        self.id = data.get("id")
+
+        avatar = data.get("avatar")
+        avatar = avatar.lstrip("https://cdn.discordapp.com/avatars/{}/".format(self.id))
+        avatar = avatar.split(".")[0]
+        self.avatar = DiscordAvatar(user_id=self.id, avatar=avatar)
