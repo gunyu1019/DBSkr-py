@@ -26,5 +26,5 @@ from .client import Client
 from .enums import *
 from .flags import BotFlag, UserFlag
 from .https import HttpClient
-from .models import Bot, Stats, Vote, User
+from .models import Bot, Bots, Stats, Vote, User
 from .widget import Widget

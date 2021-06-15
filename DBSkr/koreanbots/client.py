@@ -28,7 +28,7 @@ import discord
 from .enums import WidgetType, WidgetStyle
 from .errors import *
 from .https import HttpClient
-from .models import Stats, Vote, Bot, User
+from .models import Stats, Vote, Bot, Bots, User
 from .widget import Widget
 
 log = logging.getLogger(__name__)
@@ -75,10 +75,19 @@ class Client:
     async def vote(self, user_id: int) -> Vote:
         return await self.http.vote(bot_id=self.bot.id, user_id=user_id)
 
-    async def bots(self, bot_id: int = None) -> Bot:
+    async def bot(self, bot_id: int = None) -> Bot:
         if bot_id is None:
             bot_id = self.bot.id
-        return await self.http.bots(bot_id=bot_id)
+        return await self.http.bot(bot_id=bot_id)
+
+    async def search(self, query: str, page: int = 1) -> Bots:
+        return await self.http.search(query=query, page=page)
+
+    async def votes(self, page: int = 1) -> Bots:
+        return await self.http.votes(page=page)
+
+    async def new(self) -> Bots:
+        return await self.http.new()
 
     def widget(self, widget_type: WidgetType, bot_id: int = None,
                style: WidgetStyle = None, scale: float = None, icon: bool = None) -> Widget:

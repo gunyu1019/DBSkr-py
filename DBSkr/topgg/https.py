@@ -32,7 +32,13 @@ class HttpClient:
         self.requests = Api(token=token, session=session)
         self.session = session
 
-    async def bots(self, bot_id: int):
+    async def bot(self, bot_id: int):
+        path = "/bots/{bot_id}".format(bot_id=bot_id)
+
+        result = await self.requests.get(path=path)
+        return
+
+    async def search(self, bot_id: int):
         path = "/bots/{bot_id}".format(bot_id=bot_id)
 
         result = await self.requests.get(path=path)

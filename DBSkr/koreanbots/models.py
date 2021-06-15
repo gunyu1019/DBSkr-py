@@ -40,34 +40,35 @@ class BaseKoreanBots:
 class Bot(BaseKoreanBots):
     def __init__(self, data: dict):
         super().__init__(data)
-        data = data.get("data")
-        self.id: str = data.get("id")
-        self.discriminator: str = data.get("tag")
-        self.avatar: DiscordAvatar = DiscordAvatar(user_id=self.id, avatar=data.get("avatar"))
-        self.name: str = data.get("name")
-        self.flags: BotFlagModel = BotFlagModel(data.get("flags", 0))
-        self.library: str = data.get("lib")
-        self.prefix: str = data.get("prefix")
-        self.votes: int = data.get("votes")
-        self.servers: int = data.get("servers")
-        self.intro: str = data.get("intro")
-        self.desc: str = data.get("desc")
-        self.categories: list = [get_value(Category, x) for x in data.get("category")]
-        self.status: Status = get_value(Status, data.get("status"))
+
+        _data = data.get("data")
+        self.id: str = _data.get("id")
+        self.discriminator: str = _data.get("tag")
+        self.avatar: DiscordAvatar = DiscordAvatar(user_id=self.id, avatar=_data.get("avatar"))
+        self.name: str = _data.get("name")
+        self.flags: BotFlagModel = BotFlagModel(_data.get("flags", 0))
+        self.library: str = _data.get("lib")
+        self.prefix: str = _data.get("prefix")
+        self.votes: int = _data.get("votes")
+        self.servers: int = _data.get("servers")
+        self.intro: str = _data.get("intro")
+        self.desc: str = _data.get("desc")
+        self.categories: list = [get_value(Category, x) for x in _data.get("category")]
+        self.status: Status = get_value(Status, _data.get("status"))
         self.state: State = get_value(State, data.get("state"))
 
-        self.owners: list = [User(i) if isinstance(i, dict) else i for i in data.get("owners")]
+        self.owners: list = [User(i) if isinstance(i, dict) else i for i in _data.get("owners")]
 
         # Optional Data
-        self.website: Optional[str] = data.get("web")
-        self.github: Optional[str] = data.get("git")
-        self.invite: Optional[str] = data.get("url")
-        self.support: Optional[str] = "https://discord.gg/" + data.get("discord")
+        self.website: Optional[str] = _data.get("web")
+        self.github: Optional[str] = _data.get("git")
+        self.invite: Optional[str] = _data.get("url")
+        self.support: Optional[str] = "https://discord.gg/" + _data.get("discord")
 
         # For Premium (Optional Data)
-        self.vanity: Optional[str] = data.get("vanity")
-        self.background: Optional[ImageURL] = ImageURL(url=data.get("bg"))
-        self.banner: Optional[ImageURL] = ImageURL(url=data.get("banner"))
+        self.vanity: Optional[str] = _data.get("vanity")
+        self.background: Optional[ImageURL] = ImageURL(url=_data.get("bg"))
+        self.banner: Optional[ImageURL] = ImageURL(url=_data.get("banner"))
 
     def __eq__(self, other):
         return self.id == other.id
@@ -79,6 +80,20 @@ class Bot(BaseKoreanBots):
         return self.name + "#" + self.discriminator
 
 
+class Bots(BaseKoreanBots):
+    def __init__(self, data: dict):
+        super().__init__(data)
+        self.type: str = data.get("data", {}).get("type")
+        self.current: int = data.get("currentPage")
+        self.total: int = data.get("totalPage")
+
+        _data = []
+        for i in data.get("data"):
+            _data.append(Bot(i))
+
+        self.data: list = _data
+
+
 class Stats(BaseKoreanBots):
     def __init__(self, data: dict):
         super().__init__(data)
@@ -87,12 +102,11 @@ class Stats(BaseKoreanBots):
 
 class Vote(BaseKoreanBots):
     def __init__(self, data: dict):
-        self.data = data
         super().__init__(data)
 
-        data = data.get("data")
-        last_vote = data.get("lastVote")
-        self.voted: bool = data.get("voted", False)
+        _data = data.get("data")
+        last_vote = _data.get("lastVote")
+        self.voted: bool = _data.get("voted", False)
         self.last_vote: datetime = datetime.fromtimestamp(last_vote)
 
     def __eq__(self, other):
@@ -105,13 +119,14 @@ class Vote(BaseKoreanBots):
 class User(BaseKoreanBots):
     def __init__(self, data: dict):
         super().__init__(data)
-        data = data.get("data")
-        self.id: str = data.get("id")
-        self.flags: UserFlagModel = UserFlagModel(data.get("flags", 0))
-        self.github: Optional[str] = data.get("github")
-        self.discriminator: str = data.get("tag")
-        self.name: str = data.get("username")
-        self.bots: list = [Bot(i) if isinstance(i, dict) else i for i in data.get("bots")]
+
+        _data = data.get("data")
+        self.id: str = _data.get("id")
+        self.flags: UserFlagModel = UserFlagModel(_data.get("flags", 0))
+        self.github: Optional[str] = _data.get("github")
+        self.discriminator: str = _data.get("tag")
+        self.name: str = _data.get("username")
+        self.bots: list = [Bot(i) if isinstance(i, dict) else i for i in _data.get("bots")]
 
     def __eq__(self, other):
         return self.id == other.id

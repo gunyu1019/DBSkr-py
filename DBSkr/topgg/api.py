@@ -28,8 +28,6 @@ import json
 
 from .errors import *
 
-from datetime import datetime
-
 log = logging.getLogger(__name__)
 
 

@@ -24,7 +24,7 @@ SOFTWARE.
 import aiohttp
 
 from .api import Api
-from .models import Bot, Vote, Stats, User
+from .models import Bot, Vote, Bots, Stats, User
 from .enums import WidgetType, WidgetStyle
 from .widget import Widget
 
@@ -35,12 +35,40 @@ class HttpClient:
         self.requests = Api(token=token, session=session)
         self.session = session
 
-    async def bots(self, bot_id: int) -> Bot:
+    async def bot(self, bot_id: int) -> Bot:
         path = "/bots/{bot_id}".format(bot_id=bot_id)
 
         self.requests.version = 2
         result = await self.requests.get(path=path)
         return Bot(result)
+
+    async def search(self, query: str, page: int = 1) -> Bots:
+        params = {
+            "query": query,
+            "page": page
+        }
+        path = "/v2/search/bots"
+
+        self.requests.version = 2
+        result = await self.requests.get(path=path, query=params)
+        return Bots(result)
+
+    async def new(self) -> Bots:
+        path = "/v2/list/bots/new"
+
+        self.requests.version = 2
+        result = await self.requests.get(path=path)
+        return Bots(result)
+
+    async def votes(self, page: int = 1) -> Bots:
+        params = {
+            "page": page
+        }
+        path = "/v2/list/bots/new"
+
+        self.requests.version = 2
+        result = await self.requests.get(path=path, query=params)
+        return Bots(result)
 
     async def stats(self, bot_id: int, guild_count: int) -> Stats:
         data = {
