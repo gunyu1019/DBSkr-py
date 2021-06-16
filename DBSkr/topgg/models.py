@@ -27,8 +27,14 @@ from datetime import datetime
 from ..assets import DiscordAvatar
 
 
-class Bots:
+class BaseTopgg:
+    def __init__(self, data: dict):
+        self.data: dict = data
+
+
+class Bot(BaseTopgg):
     def __init__(self, data):
+        super().__init__(data)
         self.id: str = data.get("id", data.get("clientid"))
         self.name: str = data.get("username")
         self.discriminator: str = data.get("discriminator")
@@ -67,8 +73,17 @@ class Bots:
         return self.name + "#" + self.discriminator
 
 
-class Vote:
+class Stats(BaseTopgg):
+    def __init__(self, data):
+        super().__init__(data)
+        self.guild_count: Optional[int] = data.get("server_count")
+        self.shards: Optional[list] = data.get("shards")
+        self.shard_count: Optional[int] = data.get("shard_count")
+
+
+class Vote(BaseTopgg):
     def __int__(self, data):
+        super().__init__(data)
         self.voted: bool = data.get("voted")
 
     def __eq__(self, other):
@@ -78,20 +93,22 @@ class Vote:
         return not self.__eq__(other)
 
 
-class Search:
+class Search(BaseTopgg):
     def __init__(self, data):
-        self.results = [Bots(i) for i in data.get("results")]
-        self.limit = data.get("limit")
-        self.offset = data.get("offset")
-        self.count = data.get("count")
-        self.total = data.get("total")
+        super().__init__(data)
+        self.results: list = [Bot(i) for i in data.get("results")]
+        self.limit: int = data.get("limit")
+        self.offset: int = data.get("offset")
+        self.count: int = data.get("count")
+        self.total: int = data.get("total")
 
     def __len__(self):
         return len(self.results)
 
 
-class Users:
+class User(BaseTopgg):
     def __init__(self, data):
+        super().__init__(data)
         self.id: str = data.get("id")
         self.name: str = data.get("username")
         self.discriminator: str = data.get("discriminator")
@@ -119,10 +136,11 @@ class Users:
         self.github: Optional[str] = social.get("github")
 
 
-class VotedUser:
+class VotedUser(BaseTopgg):
     def __init__(self, data):
-        self.name = data.get("username")
-        self.id = data.get("id")
+        super().__init__(data)
+        self.name: str = data.get("username")
+        self.id: str = data.get("id")
 
         avatar = data.get("avatar")
         avatar = avatar.lstrip("https://cdn.discordapp.com/avatars/{}/".format(self.id))

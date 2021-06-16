@@ -21,13 +21,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from ..assets import Assets
+from enum import Enum
 
 
-class Widget(Assets):
-    def __init__(self, path: str, query: dict, session):
-        self.path = path
-        self.query = query
-
-        self.BASE = "https://koreanbots.dev/api"
-        super().__init__(self, support_format=['svg'], session=session)
+class WidgetType(Enum):
+    normal = None
+    status = "status"
+    servers = "servers"
+    upvotes = "upvotes"
+    library = "lib"
+    owner = "owner"

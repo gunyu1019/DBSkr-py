@@ -91,7 +91,10 @@ class Bots(BaseKoreanBots):
         for i in data.get("data"):
             _data.append(Bot(i))
 
-        self.data: list = _data
+        self.results: list = _data
+
+    def __len__(self):
+        return len(self.results)
 
 
 class Stats(BaseKoreanBots):

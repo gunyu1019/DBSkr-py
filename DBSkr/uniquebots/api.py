@@ -25,6 +25,22 @@ import aiohttp
 import json
 
 
+class GraphQL:
+    def __init__(self, query: str, variables: str = None):
+        self.query = query
+        self.variables = variables
+
+    def __str__(self):
+        if self.variables is not None:
+            return json.dumps({
+                "query": self.query,
+                "variables": self.variables
+            }, indent=4)
+        else:
+            return json.dumps({
+                "query": self.query
+            }, indent=4)
+
 class Api:
     def __init__(self, token: str, session: aiohttp.ClientSession = None):
         self.BASE = "https://uniquebots.kr/graphql"
@@ -37,19 +53,7 @@ class Api:
     def close(self):
         self.sesion.close()
 
-    @staticmethod
-    def get_graphql(query: dict, variables: dict = None):
-        if variables is not None:
-            return json.dumps({
-                "query": query,
-                "variables": variables
-            }, indent=4)
-        else:
-            return json.dumps({
-                "query": query
-            }, indent=4)
-
-    async def requests(self, data: dict, **kwargs):
+    async def requests(self, data: GraphQL, **kwargs):
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bot ' + self.token
@@ -59,9 +63,12 @@ class Api:
         else:
             kwargs['headers'] = headers
 
-        async with self.sesion.request("POST", self.BASE, data=data, **kwargs) as result:
+        async with self.sesion.request("POST", self.BASE, data=str(data), **kwargs) as result:
             if result.content_type == "application/json":
                 data = await result.json()
             else:
                 fp_data = await result.text()
                 data = json.loads(fp_data)
+
+            if result.status == 200:
+                return data

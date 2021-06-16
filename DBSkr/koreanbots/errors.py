@@ -20,13 +20,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from .. import errors
 
 
 class ClientException(Exception):
     pass
 
 
-class HTTPException(Exception):
+class HTTPException(errors.HTTPException):
     def __init__(self, response, message):
         self.status = response.status
         if isinstance(message, dict):
@@ -37,25 +38,25 @@ class HTTPException(Exception):
         super().__init__(f"{self.status} {self.error}")
 
 
-class BadRequests(HTTPException):
+class BadRequests(HTTPException, errors.BadRequests):
     pass
 
 
-class Unauthorized(HTTPException):
+class Unauthorized(HTTPException, errors.Unauthorized):
     pass
 
 
-class Forbidden(HTTPException):
+class Forbidden(HTTPException, errors.Forbidden):
     pass
 
 
-class NotFound(HTTPException):
+class NotFound(HTTPException, errors.NotFound):
     pass
 
 
-class MethodNotAllowed(HTTPException):
+class MethodNotAllowed(HTTPException, errors.MethodNotAllowed):
     pass
 
 
-class TooManyRequests(HTTPException):
+class TooManyRequests(HTTPException, errors.TooManyRequests):
     pass

@@ -28,30 +28,30 @@ from .enums import Status, get_value
 
 
 class Bot:
-    def __init__(self, data):
-        data = data.get("data")
-        self.id: str = data.get("id")
-        self.name: str = data.get("name")
-        self.trusted: bool = data.get("trusted")
-        self.verified: bool = data.get("discordVerified")
-        self.guild_count: int = data.get("guilds")
-        self.status: Status = get_value(Status, data.get("status"))
-        self.intro: str = data.get("brief")
-        self.desc: str = data.get("description")
-        self.prefix: str = data.get("prefix")
-        self.library: str = data.get("library", {}).get("name")
-        self.premium: bool = data.get("premium")
+    def __init__(self, data: dict):
+        _data = data.get("data")
+        self.id: str = _data.get("id")
+        self.name: str = _data.get("name")
+        self.trusted: bool = _data.get("trusted")
+        self.verified: bool = _data.get("discordVerified")
+        self.guild_count: int = _data.get("guilds")
+        self.status: Status = get_value(Status, _data.get("status"))
+        self.intro: str = _data.get("brief")
+        self.desc: str = _data.get("description")
+        self.prefix: str = _data.get("prefix")
+        self.library: str = _data.get("library", {}).get("name")
+        self.premium: bool = _data.get("premium")
 
-        self.owners = [User(i) for i in data.get("owners")]
+        self.owners = [User(i) if isinstance(i, dict) else i for i in _data.get("owners")]
 
         # Optional Data
-        self.invite: Optional[str] = data.get("invite")
-        self.website: Optional[str] = data.get("website")
-        self.support: Optional[str] = data.get("support")
-        self.github: Optional[str] = data.get("git")
-        self.slug: Optional[str] = data.get("slug")
+        self.invite: Optional[str] = _data.get("invite")
+        self.website: Optional[str] = _data.get("website")
+        self.support: Optional[str] = _data.get("support")
+        self.github: Optional[str] = _data.get("git")
+        self.slug: Optional[str] = _data.get("slug")
 
-        avatar = data.get("avatarURL")
+        avatar = _data.get("avatarURL")
         avatar = avatar.lstrip("https://cdn.discordapp.com/avatars/{}/".format(self.id))
         avatar = avatar.split(".")[0]
         self.avatar = DiscordAvatar(user_id=self.id, avatar=avatar)
@@ -64,6 +64,24 @@ class Bot:
 
     def __str__(self):
         return self.name
+
+
+class Stats:
+    def __init__(self, data: dict):
+        _data = data.get("data")
+        self.guilds: int = _data.get("guilds")
+
+    def __eq__(self, other):
+        return self.guilds == other if isinstance(other, str) else other.value
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __str__(self):
+        return str(self.__str__())
+
+    def __int__(self):
+        return self.guilds
 
 
 class Category:
@@ -80,12 +98,14 @@ class Category:
 
 class User:
     def __init__(self, data: dict):
-        self.id = data.get("id")
-        self.name = data.get("tag")
+        _data = data.get("data")
+        self.id: str = _data.get("id")
+        self.name: str = _data.get("tag")
+        self.desc: str = _data.get("description")
 
-        self.bots = [Bot(i) for i in data.get("bots")]
+        self.bots: list = [Bot(i) if isinstance(i, dict) else i for i in _data.get("bots")]
 
-        avatar = data.get("avatarURL")
+        avatar = _data.get("avatarURL")
         avatar = avatar.lstrip("https://cdn.discordapp.com/avatars/{}/".format(self.id))
         avatar = avatar.split(".")[0]
         self.avatar = DiscordAvatar(user_id=self.id, avatar=avatar)

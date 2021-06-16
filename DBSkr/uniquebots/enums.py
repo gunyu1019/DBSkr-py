@@ -49,9 +49,12 @@ class Categories(Enum):
     meme = Category(category_id="meme", name="밈")
     leveling = Category(category_id="leveling", name="레벨링")
     dashboard = Category(category_id="webdash", name="웹 대시보드")
+    slash = Category(category_id="slash", name="빗금 명령어")
 
     def __eq__(self, other: Union[Enum, Category, str]):
-        return self.value if not isinstance(other, str) else self.value.id == other if isinstance(other, str) else other.value
+        if isinstance(other, str):
+            return self.value.id == other
+        return self.value == other.value
 
     def __ne__(self, other):
         return not self.__eq__(other)

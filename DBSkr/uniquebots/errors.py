@@ -20,14 +20,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from .. import errors
 
-from ..assets import Assets
+
+class ClientException(Exception):
+    pass
 
 
-class Widget(Assets):
-    def __init__(self, path: str, query: dict, session):
-        self.path = path
-        self.query = query
+class HTTPException(errors.HTTPException):
+    def __init__(self, response, message):
+        self.status = response.status
+        if isinstance(message, dict):
+            self.message = message.get("error", response.reason)
+        else:
+            self.message = response.reason
+        super().__init__(f"{self.status} {self.message}")
 
-        self.BASE = "https://koreanbots.dev/api"
-        super().__init__(self, support_format=['svg'], session=session)
+
+class BadRequests(HTTPException, errors.BadRequests):
+    pass

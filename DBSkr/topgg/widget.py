@@ -29,5 +29,5 @@ class Widget(Assets):
         self.path = path
         self.query = query
 
-        self.BASE = "https://koreanbots.dev/api"
-        super().__init__(self, support_format=['svg'], session=session)
+        self.BASE = "https://top.gg/api/"
+        super().__init__(self, support_format=['svg', 'png'], session=session)
