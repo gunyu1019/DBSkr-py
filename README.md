@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="" width="50%" style=""/>
+    <img src="https://user-images.githubusercontent.com/16767890/122014718-6716d600-cdfa-11eb-8723-a64ca2df7fe0.png" width="50%"/>
 </p>
 <h1 align="center">DBSkr</h1>
 <p align="center">
