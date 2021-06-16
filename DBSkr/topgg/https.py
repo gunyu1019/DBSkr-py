@@ -22,7 +22,7 @@ SOFTWARE.
 """
 
 import aiohttp
-from typing import Union, Dict, Sequence
+from typing import Union, Sequence
 
 from .api import Api
 from .models import Bot, Search, Stats, VotedUser, User, Vote

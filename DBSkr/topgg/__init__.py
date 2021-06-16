@@ -22,3 +22,9 @@ SOFTWARE.
 """
 
 from .api import Api
+from .client import Client
+from .enums import *
+from .errors import *
+from .https import HttpClient
+from .models import Bot, Stats, Vote, VotedUser, User
+from .widget import Widget

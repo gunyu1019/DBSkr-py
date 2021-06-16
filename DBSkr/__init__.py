@@ -26,3 +26,7 @@ __author__ = 'gunyu1019'
 __license__ = 'MIT'
 __copyright__ = 'Copyright (c) 2020-2021 gunyu1019'
 __version__ = '2.0'
+
+from . import koreanbots
+from . import topgg
+from . import uniquebots

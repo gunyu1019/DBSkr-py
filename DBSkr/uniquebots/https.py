@@ -24,7 +24,7 @@ SOFTWARE.
 import aiohttp
 
 from .api import Api, GraphQL
-from .models import Bot, Stats
+from .models import Bot, Stats, Vote, User
 
 
 class HttpClient:
@@ -46,6 +46,7 @@ class HttpClient:
         }""".format(bot_id)
 
         result = await self.requests.requests(data)
+        result = result.get("data").get("bot")
         return Bot(result)
 
     async def stats(self, bot_id: int, guild_count: int) -> Stats:
@@ -61,4 +62,61 @@ class HttpClient:
         }""".format(bot_id, guild_count)
 
         result = await self.requests.requests(data)
+        result = result.get("data").get("bot")
         return Stats(result)
+
+    async def vote(self, bot_id: int, user_id: int) -> Vote:
+        data = GraphQL(query="""{
+                    bot (id: $bot_id) {
+                        heartClicked(user: user_id)
+                    }
+                }""")
+
+        data.variables = """{
+                    "bot_id": "{}",
+                    "user_id": {} 
+                }""".format(bot_id, user_id)
+
+        result = await self.requests.requests(data)
+        result = result.get("data").get("bot")
+        return Vote(result)
+
+    async def votes(self, bot_id: int) -> list:
+        data = GraphQL(query="""{
+                    bot (id: $bot_id) {
+                        hearts {
+                            from {
+                                id, tag, avatarURL, admin, description, bots {
+                                    id, name, avatarURL, trusted, discordVerified, guilds, status, brief,
+                                    description, invite, website, support, prefix, library { name },
+                                    categories { name, id }, slug, premium, owner { id } }
+                            }
+                        }
+                    }
+                }""")
+
+        data.variables = """{
+                    "bot_id": "{}"
+                }""".format(bot_id)
+
+        result = await self.requests.requests(data)
+        result = result.get("data").get("bot")
+        return result
+
+    async def users(self, user_id: int) -> User:
+        data = GraphQL(query="""{
+                    profile (id: $user_id) {
+                        id, tag, avatarURL, admin, description, bots {
+                            id, name, avatarURL, trusted, discordVerified, guilds, status, brief, description, invite,
+                            website, support, prefix, library { name }, categories { name, id }, slug, premium
+                        }
+                    }
+                }""")
+
+        data.variables = """{
+                    "user_id": "{}"
+                }""".format(user_id)
+
+        result = await self.requests.requests(data)
+        result = result.get("data").get("profile")
+        return User(result)

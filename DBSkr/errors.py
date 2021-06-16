@@ -26,7 +26,7 @@ class NotFound(HTTPException):
     pass
 
 
-class MethodNotAllowed(HTTPException, Me):
+class MethodNotAllowed(HTTPException):
     pass
 
 

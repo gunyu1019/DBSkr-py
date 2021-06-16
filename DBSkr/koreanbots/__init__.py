@@ -24,6 +24,7 @@ SOFTWARE.
 from .api import Api
 from .client import Client
 from .enums import *
+from .errors import *
 from .flags import BotFlag, UserFlag
 from .https import HttpClient
 from .models import Bot, Bots, Stats, Vote, User

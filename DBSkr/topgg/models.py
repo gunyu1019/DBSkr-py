@@ -82,7 +82,7 @@ class Stats(BaseTopgg):
 
 
 class Vote(BaseTopgg):
-    def __int__(self, data):
+    def __init__(self, data):
         super().__init__(data)
         self.voted: bool = data.get("voted")
 
