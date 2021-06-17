@@ -27,6 +27,18 @@ __license__ = 'MIT'
 __copyright__ = 'Copyright (c) 2020-2021 gunyu1019'
 __version__ = '2.0'
 
+from collections import namedtuple
+
 from . import koreanbots
 from . import topgg
 from . import uniquebots
+
+from .assets import Assets, DiscordAvatar
+from .client import Client
+from .enums import WebsiteType
+from .https import HttpClient
+from .models import *
+
+
+VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
+version_info = VersionInfo(major=2, minor=0, micro=0, releaselevel='alpha', serial=0)
