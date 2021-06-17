@@ -3,6 +3,8 @@
 </p>
 <h1 align="center">DBSkr</h1>
 <p align="center">
+    <a href="https://www.codefactor.io/repository/github/gunyu1019/dbskr-py"><img src="https://www.codefactor.io/repository/github/gunyu1019/dbskr-py/badge" alt="CodeFactor" /></a>
+    <a href="https://www.codacy.com/gh/gunyu1019/DBSkr-py/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gunyu1019/DBSkr-py&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/8b2a0f3270994feba873554ecc922531"/></a>
     <a href="https://pypistats.org/packages/DBSkr"><img src="https://img.shields.io/pypi/dm/DBSkr" alt="PyPi Downloading" /></a>
     <a href="https://pypi.org/project/DBSkr"><img src="https://img.shields.io/pypi/v/DBSkr" alt="PyPi Version" /></a>
     <a href="https://pypi.org/project/DBSkr"><img src="https://img.shields.io/pypi/pyversions/DBSkr" alt="PyPi Version" /></a>
