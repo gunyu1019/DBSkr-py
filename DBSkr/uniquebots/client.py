@@ -82,5 +82,5 @@ class Client:
     async def votes(self) -> list:
         return await self.http.votes(bot_id=self.bot.user.id)
 
-    async def users(self, user_id: int) -> User:
+    async def users(self, user_id: int, filter = None) -> User:
         return await self.http.users(user_id=user_id)

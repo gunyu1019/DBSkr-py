@@ -21,9 +21,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+from enum import Enum
+
 
 def get_value(cls, val):
     enum_val = [i for i in cls if i.value == val]
     if len(enum_val) == 0:
         return val
     return enum_val[0]
+
+
+class WebsiteType(Enum):
+    koreanbots = "koreanbots"
+    topgg = "topgg"
+    uniquebots = "uniquebots"
