@@ -52,73 +52,84 @@ class HttpClient:
         if uniquebots_token is None:
             self.uniquebots_http = uniquebots.HttpClient(token=self.koreanbots_token, session=session)
 
-    async def bot(self, bot_id: int, filter: List[WebsiteType] = None):
-        if filter is None:
-            filter = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
+    async def bot(self, bot_id: int, web_type: List[WebsiteType] = None):
+        if web_type is None:
+            web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         kbots = None
         tbots = None
         ubots = None
 
-        if self.koreanbots_http is not None and self.koreanbots_token is not None and WebsiteType.koreanbots in filter:
+        if self.koreanbots_http is not None and self.koreanbots_token is not None \
+                and WebsiteType.koreanbots in web_type:
             kbots = await self.koreanbots_http.bot(bot_id=bot_id)
-        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in filter:
+        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in web_type:
             tbots = await self.topgg_http.bot(bot_id=bot_id)
-        if self.uniquebots_http is not None and self.uniquebots_token is not None and WebsiteType.uniquebots in filter:
+        if self.uniquebots_http is not None and self.uniquebots_token is not None \
+                and WebsiteType.uniquebots in web_type:
             ubots = await self.uniquebots_http.bot(bot_id=bot_id)
         return WebsiteBot(koreanbots=kbots, topgg=tbots, uniquebots=ubots)
 
-    async def stats(self, bot_id: int, guild_count: int, filter: List[WebsiteType] = None):
-        if filter is None:
-            filter = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
+    async def stats(self, bot_id: int, guild_count: int, web_type: List[WebsiteType] = None):
+        if web_type is None:
+            web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         kbots = None
         tbots = None
         ubots = None
 
-        if self.koreanbots_http is not None and self.koreanbots_token is not None and WebsiteType.koreanbots in filter:
+        if self.koreanbots_http is not None and self.koreanbots_token is not None \
+                and WebsiteType.koreanbots in web_type:
             kbots = await self.koreanbots_http.stats(bot_id=bot_id, guild_count=guild_count)
-        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in filter:
+        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in web_type:
             tbots = await self.topgg_http.stats(bot_id=bot_id, guild_count=guild_count)
-        if self.uniquebots_http is not None and self.uniquebots_token is not None and WebsiteType.uniquebots in filter:
+        if self.uniquebots_http is not None and self.uniquebots_token is not None \
+                and WebsiteType.uniquebots in web_type:
             ubots = await self.uniquebots_http.stats(bot_id=bot_id, guild_count=guild_count)
         return WebsiteStats(koreanbots=kbots, topgg=tbots, uniquebots=ubots)
 
-    async def vote(self, bot_id: int, user_id: int, filter: List[WebsiteType] = None):
-        if filter is None:
-            filter = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
+    async def vote(self, bot_id: int, user_id: int, web_type: List[WebsiteType] = None):
+        if web_type is None:
+            web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         kbots = None
         tbots = None
         ubots = None
 
-        if self.koreanbots_http is not None and self.koreanbots_token is not None and WebsiteType.koreanbots in filter:
+        if self.koreanbots_http is not None and self.koreanbots_token is not None \
+                and WebsiteType.koreanbots in web_type:
             kbots = await self.koreanbots_http.vote(bot_id=bot_id, user_id=user_id)
-        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in filter:
+        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in web_type:
             tbots = await self.topgg_http.vote(bot_id=bot_id, user_id=user_id)
-        if self.uniquebots_http is not None and self.uniquebots_token is not None and WebsiteType.uniquebots in filter:
+        if self.uniquebots_http is not None and self.uniquebots_token is not None \
+                and WebsiteType.uniquebots in web_type:
             ubots = await self.uniquebots_http.vote(bot_id=bot_id, user_id=user_id)
         return WebsiteVote(koreanbots=kbots, topgg=tbots, uniquebots=ubots)
 
-    async def votes(self, bot_id: int, filter: List[WebsiteType] = None):
-        if filter is None:
-            filter = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
+    async def votes(self, bot_id: int, web_type: List[WebsiteType] = None):
+        if web_type is None:
+            web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         tbots = None
         ubots = None
 
-        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in filter:
+        if self.topgg_http is not None and self.topgg_token is not None \
+                and WebsiteType.topgg in web_type:
             tbots = await self.topgg_http.votes(bot_id=bot_id)
-        ubots = await self.uniquebots_http.votes(bot_id=bot_id)
+        if self.uniquebots_http is not None and self.uniquebots_token is not None \
+                and WebsiteType.uniquebots in web_type:
+            ubots = await self.uniquebots_http.votes(bot_id=bot_id)
         return WebsiteVotes(topgg=tbots, uniquebots=ubots)
 
-    async def users(self, user_id: int, filter: List[WebsiteType] = None):
-        if filter is None:
-            filter = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
+    async def users(self, user_id: int, web_type: List[WebsiteType] = None):
+        if web_type is None:
+            web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         kbots = None
         tbots = None
         ubots = None
 
-        if self.koreanbots_http is not None and self.koreanbots_token is not None and WebsiteType.koreanbots in filter:
+        if self.koreanbots_http is not None and self.koreanbots_token is not None \
+                and WebsiteType.koreanbots in web_type:
             kbots = await self.koreanbots_http.users(user_id=user_id)
-        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in filter:
+        if self.topgg_http is not None and self.topgg_token is not None and WebsiteType.topgg in web_type:
             tbots = await self.topgg_http.users(user_id=user_id)
-        if self.uniquebots_http is not None and self.uniquebots_token is not None and WebsiteType.uniquebots in filter:
+        if self.uniquebots_http is not None and self.uniquebots_token is not None \
+                and WebsiteType.uniquebots in web_type:
             ubots = await self.uniquebots_http.users(user_id=user_id)
         return WebsiteUser(koreanbots=kbots, topgg=tbots, uniquebots=ubots)
