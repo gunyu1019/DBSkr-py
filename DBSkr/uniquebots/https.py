@@ -37,16 +37,23 @@ class HttpClient:
         data = GraphQL(query="""{
             bot (id: $bot_id) {
                 id, name, avatarURL, trusted, discordVerified, guilds, status, brief, description, invite, website,
-                support, prefix, library { name }, categories { name, id }
+                support, prefix, library { name }, categories { name, id }, owners { 
+                    id, tag, avatarURL, admin, description, bots {
+                        id, name, avatarURL, trusted, discordVerified, guilds, status, brief, description, invite,
+                        website, support, prefix, library { name }, categories { name, id }, slug, premium, 
+                        owners { id }
+                    }
+                }
             }
         }""")
 
-        data.variables = """{
-            "bot_id": "{}" 
-        }""".format(bot_id)
+        data.set_variables({
+            'bot_id': str(bot_id)
+        })
+        print(data.get())
 
         result = await self.requests.requests(data)
-        result = result.get("data").get("bot")
+        result = result.get("data", {}).get("bot")
         return Bot(result)
 
     async def stats(self, bot_id: int, guild_count: int) -> Stats:
@@ -56,29 +63,29 @@ class HttpClient:
             }
         }""")
 
-        data.variables = """{
-            "bot_id": "{}",
-            "guild_count": {} 
-        }""".format(bot_id, guild_count)
+        data.set_variables({
+            'bot_id': str(bot_id),
+            'guild_count': guild_count
+        })
 
         result = await self.requests.requests(data)
-        result = result.get("data").get("bot")
+        result = result.get("data", {}).get("bot")
         return Stats(result)
 
     async def vote(self, bot_id: int, user_id: int) -> Vote:
         data = GraphQL(query="""{
                     bot (id: $bot_id) {
-                        heartClicked(user: user_id)
+                        heartClicked(user: $user_id)
                     }
                 }""")
 
-        data.variables = """{
-                    "bot_id": "{}",
-                    "user_id": {} 
-                }""".format(bot_id, user_id)
+        data.set_variables({
+            'bot_id': str(bot_id),
+            'user_id': str(user_id)
+        })
 
         result = await self.requests.requests(data)
-        result = result.get("data").get("bot")
+        result = result.get("data", {}).get("bot")
         return Vote(result)
 
     async def votes(self, bot_id: int) -> list:
@@ -89,18 +96,25 @@ class HttpClient:
                                 id, tag, avatarURL, admin, description, bots {
                                     id, name, avatarURL, trusted, discordVerified, guilds, status, brief,
                                     description, invite, website, support, prefix, library { name },
-                                    categories { name, id }, slug, premium, owner { id } }
+                                    categories { name, id }, slug, premium, owners { 
+                                        id, tag, avatarURL, admin, description, bots {
+                                            id, name, avatarURL, trusted, discordVerified, guilds, status, brief,
+                                            description, invite, website, support, prefix, library { name }, categories
+                                            { name, id }, slug, premium, owners { id }
+                                        }
+                                    } 
+                                }
                             }
                         }
                     }
                 }""")
 
-        data.variables = """{
-                    "bot_id": "{}"
-                }""".format(bot_id)
+        data.set_variables({
+            'bot_id': str(bot_id)
+        })
 
         result = await self.requests.requests(data)
-        result = result.get("data").get("bot")
+        result = result.get("data", {}).get("bot")
         return result
 
     async def users(self, user_id: int) -> User:
@@ -108,15 +122,18 @@ class HttpClient:
                     profile (id: $user_id) {
                         id, tag, avatarURL, admin, description, bots {
                             id, name, avatarURL, trusted, discordVerified, guilds, status, brief, description, invite,
-                            website, support, prefix, library { name }, categories { name, id }, slug, premium
+                            website, support, prefix, library { name }, categories { name, id }, slug, premium, 
+                            owners { 
+                                id, tag, avatarURL, admin, description, bots { id }
+                            }
                         }
                     }
                 }""")
 
-        data.variables = """{
-                    "user_id": "{}"
-                }""".format(user_id)
+        data.set_variables({
+                    'user_id': str(user_id)
+            })
 
         result = await self.requests.requests(data)
-        result = result.get("data").get("profile")
+        result = result.get("data", {}).get("profile")
         return User(result)

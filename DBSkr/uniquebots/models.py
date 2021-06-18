@@ -24,11 +24,11 @@ SOFTWARE.
 from typing import Optional
 
 from ..assets import DiscordAvatar
-from .enums import Status, get_value
 
 
 class Bot:
     def __init__(self, data: dict):
+        from .enums import Status, get_value
         self.id: str = data.get("id")
         self.name: str = data.get("name")
         self.trusted: bool = data.get("trusted")
@@ -41,7 +41,7 @@ class Bot:
         self.library: str = data.get("library", {}).get("name")
         self.premium: bool = data.get("premium")
 
-        self.owners = [User(i) if isinstance(i, dict) else i for i in data.get("owners")]
+        self.owners = [User(i) if 'tag' in i else i.get("id") for i in data.get("owners")]
 
         # Optional Data
         self.invite: Optional[str] = data.get("invite")
@@ -112,7 +112,7 @@ class User:
         self.desc: str = data.get("description")
         self.admin: bool = data.get("admin", False)
 
-        self.bots: list = [Bot(i) if isinstance(i, dict) else i for i in data.get("bots")]
+        self.bots: list = [Bot(i) if 'name' in i else i.get('id') for i in data.get("bots", [])]
 
         avatar = data.get("avatarURL")
         avatar = avatar.lstrip("https://cdn.discordapp.com/avatars/{}/".format(self.id))

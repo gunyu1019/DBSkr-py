@@ -26,20 +26,28 @@ import json
 
 
 class GraphQL:
-    def __init__(self, query: str, variables: str = None):
+    def __init__(self, query: str, variables: dict = None):
         self.query = query
         self.variables = variables
 
-    def __str__(self):
+    def get(self):
+        _key_type = {int: "Int", str: "String", bool: "boolean"}
         if self.variables is not None:
+            _key = [("${}: {}!".format(i, _key_type.get(type(self.variables.get(i))))) for i in self.variables.keys()]
+            key = ", ".join(_key)
+
             return json.dumps({
-                "query": self.query,
+                "query": "query(%s)" % key + self.query,
                 "variables": self.variables
             }, indent=4)
         else:
             return json.dumps({
                 "query": self.query
             }, indent=4)
+
+    def set_variables(self, _variables: dict):
+        self.variables = _variables
+
 
 class Api:
     def __init__(self, token: str, session: aiohttp.ClientSession = None):
@@ -55,20 +63,23 @@ class Api:
 
     async def requests(self, data: GraphQL, **kwargs):
         headers = {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bot ' + self.token
+            'Content-Type': 'application/json'
         }
+
+        if self.token is not None:
+            headers['Authorization'] = 'Bot ' + self.token
+
         if 'headers' in kwargs:
             kwargs['headers'].update(headers)
         else:
             kwargs['headers'] = headers
-
-        async with self.sesion.request("POST", self.BASE, data=str(data), **kwargs) as result:
+        async with self.sesion.request("POST", self.BASE, data=data.get(), **kwargs) as result:
             if result.content_type == "application/json":
                 data = await result.json()
             else:
                 fp_data = await result.text()
                 data = json.loads(fp_data)
 
+            print(data)
             if result.status == 200:
                 return data

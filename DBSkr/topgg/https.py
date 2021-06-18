@@ -31,7 +31,7 @@ from .widget import Widget
 
 
 class HttpClient:
-    def __init__(self, token: str, session: aiohttp.ClientSession = None):
+    def __init__(self, token: str = None, session: aiohttp.ClientSession = None):
         self.token = token
         self.requests = Api(token=token, session=session)
         self.session = session
