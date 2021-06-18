@@ -47,14 +47,16 @@ class Api:
         self.sesion.close()
 
     async def requests(self, method: str, path: str, **kwargs):
-        if self.version is not None:
+        if self.version is None:
             url = "{}{}".format(self.BASE, path)
         else:
             url = "{}/v{}{}".format(self.BASE, self.version, path)
         headers = {
-            'Content-Type': 'application/json',
-            'token': self.token
+            'Content-Type': 'application/json'
         }
+        if self.token is not None:
+            headers['Authorization'] = self.token
+
         if 'headers' in kwargs:
             kwargs['headers'].update(headers)
         else:

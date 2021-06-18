@@ -57,7 +57,7 @@ class Bot(BaseKoreanBots):
         self.status: Status = get_value(Status, _data.get("status"))
         self.state: State = get_value(State, data.get("state"))
 
-        self.owners: list = [User(i) if isinstance(i, dict) else i for i in _data.get("owners")]
+        self.owners: list = [User(i) if isinstance(i, dict) else i for i in _data.get("owners", [])]
 
         # Optional Data
         self.website: Optional[str] = _data.get("web")
@@ -67,8 +67,8 @@ class Bot(BaseKoreanBots):
 
         # For Premium (Optional Data)
         self.vanity: Optional[str] = _data.get("vanity")
-        self.background: Optional[ImageURL] = ImageURL(url=_data.get("bg"))
-        self.banner: Optional[ImageURL] = ImageURL(url=_data.get("banner"))
+        self.background: Optional[ImageURL] = ImageURL(url=_data.get("bg")) if _data.get("bg") is not None else None
+        self.banner: Optional[ImageURL] = ImageURL(url=_data.get("banner")) if _data.get("bg") is not None else None
 
     def __eq__(self, other):
         return self.id == other.id
@@ -123,13 +123,13 @@ class User(BaseKoreanBots):
     def __init__(self, data: dict):
         super().__init__(data)
 
-        _data = data.get("data")
+        _data = data.get("data", data)
         self.id: str = _data.get("id")
         self.flags: UserFlagModel = UserFlagModel(_data.get("flags", 0))
         self.github: Optional[str] = _data.get("github")
         self.discriminator: str = _data.get("tag")
         self.name: str = _data.get("username")
-        self.bots: list = [Bot(i) if isinstance(i, dict) else i for i in _data.get("bots")]
+        self.bots: list = [Bot(i) if isinstance(i, dict) else i for i in _data.get("bots", [])]
 
     def __eq__(self, other):
         return self.id == other.id

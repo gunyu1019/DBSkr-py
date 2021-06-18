@@ -46,9 +46,11 @@ class Api:
     async def requests(self, method: str, path: str, **kwargs):
         url = "{}{}".format(self.BASE, path)
         headers = {
-            'Content-Type': 'application/json',
-            'Authorization': self.token
+            'Content-Type': 'application/json'
         }
+        if self.token is not None:
+            headers['Authorization'] = self.token
+
         if 'headers' in kwargs:
             kwargs['headers'].update(headers)
         else:

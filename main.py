@@ -22,3 +22,12 @@ print(bot)
 print(bot.owners)
 print(bot.owners[0].bots)
 print(bot.owners[0].bots[0].owners)
+
+bot = event.run_until_complete(http1.bot(680694763036737536))
+print(bot)
+print(bot.owners)
+print(bot.owners[0].bots)
+
+http1.requests.close()
+http2.requests.close()
+http3.requests.close()
