@@ -41,4 +41,4 @@ from .models import *
 
 
 VersionInfo = namedtuple('VersionInfo', 'major minor micro releaselevel serial')
-version_info = VersionInfo(major=2, minor=0, micro=0, releaselevel='alpha', serial=0)
+version_info = VersionInfo(major=2, minor=0, micro=0, releaselevel='beta', serial=0)

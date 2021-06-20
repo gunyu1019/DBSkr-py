@@ -1,9 +1,16 @@
 from setuptools import setup
 
+packages = [
+    'DBSkr',
+    'DBSkr.koreanbots'
+    'DBSkr.topgg'
+    'DBSkr.uniquebots'
+]
+
 setup(
     name='DBSKR',
     version='v2.0',
-    packages=['DBSkr'],
+    packages=packages,
     url='https://github.com/gunyu1019/DBSkr-py',
     license='MIT',
     author='gunyu1019',
