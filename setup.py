@@ -2,8 +2,8 @@ from setuptools import setup
 
 packages = [
     'DBSkr',
-    'DBSkr.koreanbots'
-    'DBSkr.topgg'
+    'DBSkr.koreanbots',
+    'DBSkr.topgg',
     'DBSkr.uniquebots'
 ]
 
