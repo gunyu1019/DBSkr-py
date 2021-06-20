@@ -30,25 +30,78 @@ class WebsiteBase:
 
 
 class WebsiteBot(WebsiteBase):
+    """ 웹사이트로 부터 들어온 봇 정보의 모델을 나타냅니다.
+
+    Attributes
+    ------------
+    koreanbots: Optional
+        koreanbots로 부터 들어온 값이 포함됩니다.
+    topgg: Optional
+        top.gg로 부터 들어온 값이 포함됩니다.
+    uniquebots: Optional
+        UniqueBots로 부터 들어온 값이 포함됩니다.
+    """
     def __init__(self, koreanbots=None, topgg=None, uniquebots=None):
         super().__init__(koreanbots=koreanbots, topgg=topgg, uniquebots=uniquebots)
 
 
 class WebsiteStats(WebsiteBase):
+    """ 웹사이트로 부터 들어온 봇 상태 정보의 모델을 나타냅니다.
+
+    Attributes
+    ------------
+    koreanbots: Optional
+        koreanbots로 부터 들어온 값이 포함됩니다.
+    topgg: Optional
+        top.gg로 부터 들어온 값이 포함됩니다.
+    uniquebots: Optional
+        UniqueBots로 부터 들어온 값이 포함됩니다.
+    """
     def __init__(self, koreanbots=None, topgg=None, uniquebots=None):
         super().__init__(koreanbots=koreanbots, topgg=topgg, uniquebots=uniquebots)
 
 
 class WebsiteVote(WebsiteBase):
+    """ 웹사이트로 부터 들어온 사용자 투표 정보에 대한 모델을 나타냅니다.
+
+    Attributes
+    ------------
+    koreanbots: Optional
+        koreanbots로 부터 들어온 값이 포함됩니다.
+    topgg: Optional
+        top.gg로 부터 들어온 값이 포함됩니다.
+    uniquebots: Optional
+        UniqueBots로 부터 들어온 값이 포함됩니다.
+    """
     def __init__(self, koreanbots=None, topgg=None, uniquebots=None):
         super().__init__(koreanbots=koreanbots, topgg=topgg, uniquebots=uniquebots)
 
 
 class WebsiteVotes(WebsiteBase):
+    """ 웹사이트로 부터 들어온 봇 하트 정보에 대한 모델을 나타냅니다.
+
+    Attributes
+    ------------
+    topgg: Optional
+        top.gg로 부터 들어온 값이 포함됩니다.
+    uniquebots: Optional
+        UniqueBots로 부터 들어온 값이 포함됩니다.
+    """
     def __init__(self, topgg=None, uniquebots=None):
         super().__init__(topgg=topgg, uniquebots=uniquebots)
 
 
 class WebsiteUser(WebsiteBase):
+    """ 웹사이트로 부터 들어온 사용자 정보에 대한 모델을 나타냅니다.
+
+    Attributes
+    ------------
+    koreanbots: Optional
+        koreanbots로 부터 들어온 값이 포함됩니다.
+    topgg: Optional
+        top.gg로 부터 들어온 값이 포함됩니다.
+    uniquebots: Optional
+        UniqueBots로 부터 들어온 값이 포함됩니다.
+    """
     def __init__(self, koreanbots=None, topgg=None, uniquebots=None):
         super().__init__(koreanbots=koreanbots, topgg=topgg, uniquebots=uniquebots)
