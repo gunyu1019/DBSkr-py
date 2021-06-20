@@ -28,6 +28,7 @@ import asyncio
 
 from .https import HttpClient
 from .enums import WebsiteType
+from .models import *
 from .errors import ClientException, TooManyRequests
 
 log = logging.getLogger(__name__)
@@ -114,21 +115,21 @@ class Client:
         """`discord.Client`의 .guilds 값에 있는 목록의 갯수를 읽어옵니다."""
         return len(self.client.guilds)
 
-    async def bot(self, bot_id: int = None, web_type: WebsiteType = None):
+    async def bot(self, bot_id: int = None, web_type: WebsiteType = None) -> WebsiteBot:
         if bot_id is None:
             bot_id = self.client.user.id
         return await self.http.bot(bot_id=bot_id, web_type=web_type)
 
-    async def stats(self, guild_count: int = None, web_type: WebsiteType = None):
+    async def stats(self, guild_count: int = None, web_type: WebsiteType = None) -> WebsiteStats:
         if guild_count is None:
             guild_count = self.guild_count()
         return await self.http.stats(bot_id=self.client.user.id, guild_count=guild_count, web_type=web_type)
 
-    async def vote(self, user_id: int, web_type: WebsiteType = None):
+    async def vote(self, user_id: int, web_type: WebsiteType = None) -> WebsiteVote:
         return await self.http.vote(bot_id=self.client.user.id, user_id=user_id, web_type=web_type)
 
-    async def votes(self, web_type: WebsiteType = None) -> list:
+    async def votes(self, web_type: WebsiteType = None) -> WebsiteVotes:
         return await self.http.votes(bot_id=self.client.user.id, web_type=web_type)
 
-    async def users(self, user_id: int, web_type: WebsiteType = None):
+    async def users(self, user_id: int, web_type: WebsiteType = None) -> WebsiteUser:
         return await self.http.users(user_id=user_id, web_type=web_type)
