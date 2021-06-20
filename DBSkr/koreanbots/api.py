@@ -24,6 +24,7 @@ SOFTWARE.
 import aiohttp
 import asyncio
 import json
+import time
 import logging
 
 from datetime import datetime
@@ -34,17 +35,38 @@ log = logging.getLogger(__name__)
 
 
 class Api:
-    def __init__(self, token: str = None, version: int = 2, session: aiohttp.ClientSession = None):
+    def __init__(self,
+                 token: str = None,
+                 version: int = 2,
+                 session: aiohttp.ClientSession = None,
+                 loop: asyncio.AbstractEventLoop = None,
+                 refresh_session: int = 300):
         self.BASE = "https://koreanbots.dev/api"
         self.token = token
         self.version = version
+        self.loop = loop
         if session is not None:
-            self.sesion = session
+            self.session = session
         else:
-            self.sesion = aiohttp.ClientSession()
+            self.session = aiohttp.ClientSession(loop=self.loop)
 
-    def close(self):
-        self.sesion.close()
+        self._session_start = time.time()
+        self.refresh_session_period = refresh_session
+
+    async def close(self):
+        await self.session.close()
+
+    async def refresh_session(self):
+        await self.session.close()
+        self.session = aiohttp.ClientSession(loop=self.loop)
+        self._session_start = time.time()
+
+    async def get_session(self):
+        if not self.session:
+            await self.refresh_session()
+        elif 0 <= self.refresh_session_period <= time.time() - self._session_start:
+            await self.refresh_session()
+        return self.session
 
     async def requests(self, method: str, path: str, **kwargs):
         if self.version is None:
@@ -63,7 +85,8 @@ class Api:
             kwargs['headers'] = headers
 
         for tries in range(5):
-            async with self.sesion.request(method, url, **kwargs) as response:
+            session = await self.get_session()
+            async with session.request(method, url, **kwargs) as response:
                 if response.content_type == "application/json":
                     data = await response.json()
                 else:

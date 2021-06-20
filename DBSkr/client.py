@@ -69,23 +69,22 @@ class Client:
                  topgg_token: str = None,
                  uniquebots_token: str = None,
                  session: aiohttp.ClientSession = None,
-                 loop: asyncio.ProactorEventLoop = None,
+                 loop: asyncio.AbstractEventLoop = None,
                  autopost: bool = True,
                  autopost_interval: int = 3600):
         self.koreanbots_token = koreanbots_token
         self.topgg_token = topgg_token
         self.uniquebots_token = uniquebots_token
-        self.bot = bot
+        self.client = bot
         self.http = HttpClient(koreanbots_token=koreanbots_token,
                                topgg_token=topgg_token,
                                uniquebots_token=uniquebots_token,
-                               session=session)
+                               session=session,
+                               loop=loop)
 
         self.autopost = autopost
         self.autopost_interval: int = autopost_interval
-        self.loop = loop
-        if self.loop is not None:
-            self.loop = self.bot.loop
+        self.loop = loop or self.client.loop
 
         if autopost:
             if self.autopost_interval < 900:
@@ -100,8 +99,8 @@ class Client:
         `discord.Client`의 .guilds 값에 있는 목록의 갯수를 읽어서 `stats()`를 통하여 각 API로 자동으로 보냅니다.
         만약에 아무 API 키가 없을 경우, 작동하지 않습니다. 최소 한 곳이상 등록해 주세요.
         """
-        await self.bot.wait_until_ready()
-        while not self.bot.is_closed():
+        await self.client.wait_until_ready()
+        while not self.client.is_closed():
             if self.koreanbots_token == self.topgg_token == self.uniquebots_token is None:
                 return
             log.info('Autoposting guild count.')
@@ -113,23 +112,23 @@ class Client:
 
     def guild_count(self) -> int:
         """`discord.Client`의 .guilds 값에 있는 목록의 갯수를 읽어옵니다."""
-        return len(self.bot.guilds)
+        return len(self.client.guilds)
 
     async def bot(self, bot_id: int = None, web_type: WebsiteType = None):
         if bot_id is None:
-            bot_id = self.bot.user.id
-        return self.http.bot(bot_id=bot_id, web_type=web_type)
+            bot_id = self.client.user.id
+        return await self.http.bot(bot_id=bot_id, web_type=web_type)
 
     async def stats(self, guild_count: int = None, web_type: WebsiteType = None):
         if guild_count is None:
             guild_count = self.guild_count()
-        return self.http.stats(bot_id=self.bot.user.id, guild_count=guild_count, web_type=web_type)
+        return await self.http.stats(bot_id=self.client.user.id, guild_count=guild_count, web_type=web_type)
 
     async def vote(self, user_id: int, web_type: WebsiteType = None):
-        return await self.http.vote(bot_id=self.bot.user.id, user_id=user_id, web_type=web_type)
+        return await self.http.vote(bot_id=self.client.user.id, user_id=user_id, web_type=web_type)
 
     async def votes(self, web_type: WebsiteType = None) -> list:
-        return await self.http.votes(bot_id=self.bot.user.id, web_type=web_type)
+        return await self.http.votes(bot_id=self.client.user.id, web_type=web_type)
 
     async def users(self, user_id: int, web_type: WebsiteType = None):
         return await self.http.users(user_id=user_id, web_type=web_type)

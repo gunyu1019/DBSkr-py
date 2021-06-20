@@ -22,6 +22,7 @@ SOFTWARE.
 """
 
 import aiohttp
+import asyncio
 from typing import Union, Sequence
 
 from .api import Api
@@ -31,9 +32,11 @@ from .widget import Widget
 
 
 class HttpClient:
-    def __init__(self, token: str = None, session: aiohttp.ClientSession = None):
+    def __init__(self, token: str = None,
+                 session: aiohttp.ClientSession = None,
+                 loop: asyncio.AbstractEventLoop = None):
         self.token = token
-        self.requests = Api(token=token, session=session)
+        self.requests = Api(token=token, session=session, loop=loop)
         self.session = session
 
     async def bot(self, bot_id: int) -> Bot:
@@ -93,7 +96,7 @@ class HttpClient:
                 "shard_id": shard_id,
                 "shard_count": shard_count
             }
-            result = await self.requests.post(path=path, data=data)
+            result = await self.requests.post(path=path, json=data)
         else:
             result = await self.requests.get(path=path)
         return Stats(result)

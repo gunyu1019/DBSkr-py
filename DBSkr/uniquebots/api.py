@@ -21,8 +21,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import asyncio
 import aiohttp
+import logging
 import json
+import time
+
+log = logging.getLogger()
 
 
 class GraphQL:
@@ -50,16 +55,36 @@ class GraphQL:
 
 
 class Api:
-    def __init__(self, token: str, session: aiohttp.ClientSession = None):
+    def __init__(self,
+                 token: str = None,
+                 session: aiohttp.ClientSession = None,
+                 loop: asyncio.AbstractEventLoop = None,
+                 refresh_session: int = 300):
         self.BASE = "https://uniquebots.kr/graphql"
         self.token = token
+        self.loop = loop
         if session is not None:
-            self.sesion = session
+            self.session = session
         else:
-            self.sesion = aiohttp.ClientSession()
+            self.session = aiohttp.ClientSession(loop=self.loop)
 
-    def close(self):
-        self.sesion.close()
+        self._session_start = time.time()
+        self.refresh_session_period = refresh_session
+
+    async def close(self):
+        await self.session.close()
+
+    async def refresh_session(self):
+        await self.session.close()
+        self.session = aiohttp.ClientSession(loop=self.loop)
+        self._session_start = time.time()
+
+    async def get_session(self):
+        if not self.session:
+            await self.refresh_session()
+        elif 0 <= self.refresh_session_period <= time.time() - self._session_start:
+            await self.refresh_session()
+        return self.session
 
     async def requests(self, data: GraphQL, **kwargs):
         headers = {
@@ -73,13 +98,16 @@ class Api:
             kwargs['headers'].update(headers)
         else:
             kwargs['headers'] = headers
-        async with self.sesion.request("POST", self.BASE, data=data.get(), **kwargs) as result:
-            if result.content_type == "application/json":
-                data = await result.json()
+
+        session = await self.get_session()
+        async with session.request("POST", self.BASE, data=data.get(), **kwargs) as response:
+            if response.content_type == "application/json":
+                data = await response.json()
             else:
-                fp_data = await result.text()
+                fp_data = await response.text()
                 data = json.loads(fp_data)
 
-            print(data)
-            if result.status == 200:
+            log.debug(f'POST {self.BASE} returned {response.status}')
+
+            if response.status == 200:
                 return data

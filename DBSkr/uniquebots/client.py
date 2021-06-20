@@ -37,18 +37,17 @@ class Client:
                  bot: discord.Client,
                  token: str = None,
                  session: aiohttp.ClientSession = None,
-                 loop: asyncio.ProactorEventLoop = None,
+                 loop: asyncio.AbstractEventLoop = None,
                  autopost: bool = True,
                  autopost_interval: int = 3600):
         self.token = token
-        self.bot = bot
-        self.http = HttpClient(token=token, session=session)
+        self.client = bot
+
+        self.loop = loop or self.client.loop
+        self.http = HttpClient(token=token, session=session, loop=self.loop)
 
         self.autopost = autopost
         self.autopost_interval: int = autopost_interval
-        self.loop = loop
-        if self.loop is not None:
-            self.loop = self.bot.loop
 
         if autopost:
             if self.autopost_interval < 180:
@@ -57,30 +56,30 @@ class Client:
             self.autopost_task = self.loop.create_task(self._auto_post())
 
     async def _auto_post(self):
-        await self.bot.wait_until_ready()
-        while not self.bot.is_closed():
+        await self.client.wait_until_ready()
+        while not self.client.is_closed():
             log.info('Autoposting guild count to UniqueBots.')
             await self.stats()
             await asyncio.sleep(self.autopost_interval)
 
     def guild_count(self) -> int:
-        return len(self.bot.guilds)
+        return len(self.client.guilds)
 
     async def stats(self, guild_count: int = None) -> Stats:
         if guild_count is None:
             guild_count = self.guild_count()
-        return await self.http.stats(bot_id=self.bot.user.id, guild_count=guild_count)
+        return await self.http.stats(bot_id=self.client.user.id, guild_count=guild_count)
 
     async def vote(self, user_id: int) -> Vote:
-        return await self.http.vote(bot_id=self.bot.user.id, user_id=user_id)
+        return await self.http.vote(bot_id=self.client.user.id, user_id=user_id)
 
     async def bot(self, bot_id: int = None) -> Bot:
         if bot_id is None:
-            bot_id = self.bot.user.id
+            bot_id = self.client.user.id
         return await self.http.bot(bot_id=bot_id)
 
     async def votes(self) -> list:
-        return await self.http.votes(bot_id=self.bot.user.id)
+        return await self.http.votes(bot_id=self.client.user.id)
 
     async def users(self, user_id: int, filter = None) -> User:
         return await self.http.users(user_id=user_id)

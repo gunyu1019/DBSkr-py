@@ -40,18 +40,17 @@ class Client:
     def __init__(self,
                  bot: discord.Client, token: str = None,
                  session: aiohttp.ClientSession = None,
-                 loop: asyncio.ProactorEventLoop = None,
+                 loop: asyncio.AbstractEventLoop = None,
                  autopost: bool = True,
                  autopost_interval: int = 3600):
         self.token = token
-        self.bot = bot
-        self.http = HttpClient(token=token, session=session)
+        self.client = bot
+
+        self.loop = loop or self.client.loop
+        self.http = HttpClient(token=token, session=session, loop=self.loop)
 
         self.autopost = autopost
         self.autopost_interval: int = autopost_interval
-        self.loop = loop
-        if self.loop is not None:
-            self.loop = self.bot.loop
 
         if autopost:
             if self.autopost_interval < 900:
@@ -60,13 +59,13 @@ class Client:
             self.autopost_task = self.loop.create_task(self._auto_post())
 
     async def _auto_post(self):
-        await self.bot.wait_until_ready()
-        while not self.bot.is_closed():
+        await self.client.wait_until_ready()
+        while not self.client.is_closed():
             try:
                 log.info('Autoposting guild count to topgg.')
-                if isinstance(self.bot, discord.AutoShardedClient):
-                    shard_id = self.bot.shard_id
-                    shard_count = self.bot.shard_count
+                if isinstance(self.client, discord.AutoShardedClient):
+                    shard_id = self.client.shard_id
+                    shard_count = self.client.shard_count
                     await self.stats(shard_count=shard_count, shard_id=shard_id)
                 else:
                     await self.stats()
@@ -76,7 +75,7 @@ class Client:
             await asyncio.sleep(self.autopost_interval)
 
     def guild_count(self) -> int:
-        return len(self.bot.guilds)
+        return len(self.client.guilds)
 
     async def stats(self,
                     guild_count: Union[int, list] = None,
@@ -84,18 +83,18 @@ class Client:
                     shard_count: int = None) -> Stats:
         if guild_count is None:
             guild_count = self.guild_count()
-        return await self.http.stats(bot_id=self.bot.user.id, guild_count=guild_count,
+        return await self.http.stats(bot_id=self.client.user.id, guild_count=guild_count,
                                      shard_id=shard_id, shard_count=shard_count)
 
     async def vote(self, user_id: int) -> Vote:
-        return await self.http.vote(bot_id=self.bot.user.id, user_id=user_id)
+        return await self.http.vote(bot_id=self.client.user.id, user_id=user_id)
 
     async def votes(self) -> VotedUser:
-        return await self.http.votes(bot_id=self.bot.user.id)
+        return await self.http.votes(bot_id=self.client.user.id)
 
     async def bot(self, bot_id: int = None) -> Bot:
         if bot_id is None:
-            bot_id = self.bot.user.id
+            bot_id = self.client.user.id
         return await self.http.bot(bot_id=bot_id)
 
     async def search(self,
@@ -111,5 +110,5 @@ class Client:
 
     def widget(self, bot_id: int, widget_type: WidgetType = None) -> Widget:
         if bot_id is None:
-            bot_id = self.bot.user.id
+            bot_id = self.client.user.id
         return self.http.widget(widget_type=widget_type, bot_id=bot_id)

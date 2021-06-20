@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import asyncio
 import aiohttp
 from typing import List
 
@@ -34,10 +35,12 @@ from .enums import WebsiteType
 
 class HttpClient:
     def __init__(self,
+                 loop: asyncio.AbstractEventLoop = None,
                  session: aiohttp.ClientSession = None,
                  koreanbots_token: str = None,
                  topgg_token: str = None,
                  uniquebots_token: str = None):
+        self.loop = loop
         self.koreanbots_token = koreanbots_token
         self.topgg_token = topgg_token
         self.uniquebots_token = uniquebots_token
@@ -45,12 +48,12 @@ class HttpClient:
         self.koreanbots_http = None
         self.topgg_http = None
         self.uniquebots_http = None
-        if koreanbots_token is None:
-            self.koreanbots_http = koreanbots.HttpClient(token=self.koreanbots_token, session=session)
-        if topgg_token is None:
-            self.topgg_http = topgg.HttpClient(token=self.koreanbots_token, session=session)
-        if uniquebots_token is None:
-            self.uniquebots_http = uniquebots.HttpClient(token=self.koreanbots_token, session=session)
+        if koreanbots_token is not None:
+            self.koreanbots_http = koreanbots.HttpClient(token=self.koreanbots_token, session=session, loop=loop)
+        if topgg_token is not None:
+            self.topgg_http = topgg.HttpClient(token=self.topgg_token, session=session, loop=loop)
+        if uniquebots_token is not None:
+            self.uniquebots_http = uniquebots.HttpClient(token=self.uniquebots_token, session=session, loop=loop)
 
     async def bot(self, bot_id: int, web_type: List[WebsiteType] = None):
         if web_type is None:

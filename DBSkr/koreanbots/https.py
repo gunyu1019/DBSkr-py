@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import asyncio
 
 import aiohttp
 
@@ -30,9 +31,13 @@ from .widget import Widget
 
 
 class HttpClient:
-    def __init__(self, token: str = None, session: aiohttp.ClientSession = None):
+    def __init__(self,
+                 token: str = None,
+                 session: aiohttp.ClientSession = None,
+                 loop: asyncio.AbstractEventLoop = None):
         self.token = token
-        self.requests = Api(token=token, session=session)
+        self.loop = loop
+        self.requests = Api(token=token, session=session, loop=loop)
         self.session = session
 
     async def bot(self, bot_id: int) -> Bot:
@@ -77,7 +82,7 @@ class HttpClient:
         path = "/bots/{bot_id}/stats".format(bot_id=bot_id)
 
         self.requests.version = 2
-        result = await self.requests.post(path=path, data=data)
+        result = await self.requests.post(path=path, json=data)
         return Stats(result)
 
     async def vote(self, bot_id: int, user_id: int) -> Vote:

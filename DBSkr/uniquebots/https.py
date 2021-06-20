@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import asyncio
 import aiohttp
 
 from .api import Api, GraphQL
@@ -28,9 +29,12 @@ from .models import Bot, Stats, Vote, User
 
 
 class HttpClient:
-    def __init__(self, token: str = None, session: aiohttp.ClientSession = None):
+    def __init__(self,
+                 token: str = None,
+                 session: aiohttp.ClientSession = None,
+                 loop: asyncio.AbstractEventLoop = None):
         self.token = token
-        self.requests = Api(token=token, session=session)
+        self.requests = Api(token=token, session=session, loop=loop)
         self.session = session
 
     async def bot(self, bot_id: int) -> Bot:
@@ -50,7 +54,6 @@ class HttpClient:
         data.set_variables({
             'bot_id': str(bot_id)
         })
-        print(data.get())
 
         result = await self.requests.requests(data)
         result = result.get("data", {}).get("bot")
