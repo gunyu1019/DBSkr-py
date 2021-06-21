@@ -26,6 +26,8 @@ import logging
 import aiohttp
 import asyncio
 
+from typing import List
+
 from .https import HttpClient
 from .enums import WebsiteType
 from .models import *
@@ -95,7 +97,7 @@ class Client:
 
     async def _auto_post(self):
         """
-        본 함수는 코루틴(비동기)를 기반으로 돌아갑니다.
+        본 함수는 코루틴(비동기)함수 입니다.
 
         `discord.Client`의 .guilds 값에 있는 목록의 갯수를 읽어서 `stats()`를 통하여 각 API로 자동으로 보냅니다.
         만약에 아무 API 키가 없을 경우, 작동하지 않습니다. 최소 한 곳이상 등록해 주세요.
@@ -115,21 +117,116 @@ class Client:
         """`discord.Client`의 .guilds 값에 있는 목록의 갯수를 읽어옵니다."""
         return len(self.client.guilds)
 
-    async def bot(self, bot_id: int = None, web_type: WebsiteType = None) -> WebsiteBot:
+    async def bot(self, bot_id: int = None, web_type: List[WebsiteType] = None) -> WebsiteBot:
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        봇 정보를 불러옵니다.
+
+        Parameters
+        ----------
+        bot_id: Optional[int]
+            봇 ID 값이 포함됩니다.
+        web_type: Optional[list[WebsiteType]]
+            값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
+        Returns
+        -------
+        WebsiteBot:
+            웹사이트로 부터 들어온 봇 정보가 포함되어 있습니다.
+        """
         if bot_id is None:
             bot_id = self.client.user.id
         return await self.http.bot(bot_id=bot_id, web_type=web_type)
 
-    async def stats(self, guild_count: int = None, web_type: WebsiteType = None) -> WebsiteStats:
+    async def stats(self, guild_count: int = None, web_type: List[WebsiteType] = None) -> WebsiteStats:
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        봇 정보를 수신하거나 발신합니다.
+
+        Notes
+        -----
+        top.gg 에서는 :meth:`guild_count` 외에도, `shard_count`, `shard_ids` 등의 다른 데이터도 수신할 수 있지만,
+        기본 Client와 HttpClient에서는 지원하지 않습니다.
+
+        Parameters
+        ----------
+        guild_count: Optional[int]
+            서버 갯수가 포함되어 있습니다.
+        web_type: List[WebsiteType]
+            값을 보낼 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 웹사이트에만 발송합니다.
+        Returns
+        -------
+        WebsiteStats:
+            웹사이트로 부터 들어온 봇 상태 정보가 포함되어 있습니다.
+        """
         if guild_count is None:
             guild_count = self.guild_count()
         return await self.http.stats(bot_id=self.client.user.id, guild_count=guild_count, web_type=web_type)
 
-    async def vote(self, user_id: int, web_type: WebsiteType = None) -> WebsiteVote:
+    async def vote(self, user_id: int, web_type: List[WebsiteType] = None) -> WebsiteVote:
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        `user_id`에 들어있는 사용자가 봇에 하트 혹은 투표를 누른 여부에 대하여 불러옵니다.
+
+        Parameters
+        ----------
+        user_id: Optional[int]
+            유저 ID 값이 포함되어 있습니다.
+        web_type: List[WebsiteType]
+            값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
+
+        Returns
+        -------
+        WebsiteVote:
+            웹사이트로 부터 들어온 사용자 투표 정보에 대한 정보가 포함되어 있습니다.
+        """
         return await self.http.vote(bot_id=self.client.user.id, user_id=user_id, web_type=web_type)
 
-    async def votes(self, web_type: WebsiteType = None) -> WebsiteVotes:
+    async def votes(self, web_type: List[WebsiteType] = None) -> WebsiteVotes:
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        하트 혹은 투표를 누른 사용자 목록을 모두 불러옵니다.
+
+        Notes
+        -----
+        koreanbots 에서는 사용자 하트 목록을 불러오지 못합니다. topgg 혹은 uniquebots 모델만 사용이 가능합니다.
+
+        Parameters
+        ----------
+        web_type: List[WebsiteType]
+            값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
+
+        Returns
+        -------
+        WebsiteVotes:
+            웹사이트로 부터 들어온 봇 하트 정보가 포함되어 있습니다.
+        """
         return await self.http.votes(bot_id=self.client.user.id, web_type=web_type)
 
-    async def users(self, user_id: int, web_type: WebsiteType = None) -> WebsiteUser:
+    async def users(self, user_id: int, web_type: List[WebsiteType] = None) -> WebsiteUser:
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        사용자 정보를 불러옵니다.
+
+        Parameters
+        ----------
+        user_id: int
+            사용자 ID 값이 포함됩니다.
+        web_type: List[WebsiteType]
+            값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
+
+        Returns
+        -------
+        WebsiteUser
+            웹사이트로 부터 들어온 사용자 정보가 포함되어 있습니다.
+        """
         return await self.http.users(user_id=user_id, web_type=web_type)
