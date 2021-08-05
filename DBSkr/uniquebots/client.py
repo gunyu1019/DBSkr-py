@@ -56,9 +56,8 @@ class Client:
         자동으로 길드 정보를 등록된 토큰 값을 통하여 전송할지 설정합니다. 기본값은 False 입니다.
     autopost_interval: Optional[int]
         `autopost` 를 활성화하였을 때 작동하는 매개변수 입니다. 초단위로 주기를 설정합니다.
-        기본값은 3600초(30분) 간격으로 설정됩니다. 만약 설정할 경우 무조건 900초(15분) 이상 설정해야합니다.
+        기본값은 3600초(30분) 간격으로 설정됩니다. 만약 설정할 경우 무조건 180초(3분) 이상 설정해야합니다.
     """
-
     def __init__(self,
                  bot: discord.Client,
                  token: str = None,
@@ -100,19 +99,19 @@ class Client:
 
     async def stats(self, guild_count: int = None) -> Stats:
         """
-            본 함수는 코루틴(비동기)함수 입니다.
+        본 함수는 코루틴(비동기)함수 입니다.
 
-            봇 정보를 수신하거나 발신합니다.
+        봇 정보를 수신하거나 발신합니다.
 
-            Parameters
-            ----------
-            guild_count: Optional[int]
-                서버 갯수가 포함되어 있습니다.
-                값이 비어있을 경우 `.guild_count`를 통하여 불러옵니다.
-            Returns
-            -------
-            Stats:
-                UniqueBots로 부터 들어온 봇 상태 정보가 포함되어 있습니다.
+        Parameters
+        ----------
+        guild_count: Optional[int]
+            서버 갯수가 포함되어 있습니다.
+            값이 비어있을 경우 `.guild_count`를 통하여 불러옵니다.
+        Returns
+        -------
+        Stats:
+            UniqueBots로 부터 들어온 봇 상태 정보가 포함되어 있습니다.
         """
         if guild_count is None:
             guild_count = self.guild_count()
@@ -164,10 +163,25 @@ class Client:
 
         Returns
         -------
-        List[]:
-            UniqueBots로 부터 들어온 봇 정보가 포함되어 있습니다.
+        List[User]:
+            UniqueBots로 부터 하트 누른 사용자 목록에 대한 정보가 포함되어 있습니다.
         """
         return await self.http.votes(bot_id=self.client.user.id)
 
     async def users(self, user_id: int) -> User:
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        사용자 정보를 불러옵니다.
+
+        Parameters
+        ----------
+        user_id: int
+            사용자 ID 값이 포함됩니다.
+
+        Returns
+        -------
+        User
+            UniqueBots로 부터 들어온 사용자 정보가 포함되어 있습니다.
+        """
         return await self.http.users(user_id=user_id)
