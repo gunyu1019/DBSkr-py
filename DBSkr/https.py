@@ -34,6 +34,26 @@ from .enums import WebsiteType
 
 
 class HttpClient:
+    """ DBSkr의 Http 클라이언트를 선언합니다.
+     Http 클라이언트를 통하여 KoreanBots 클라이언트, top.gg 클라이언트, UniqueBots 클라이언트에 연결됩니다.
+     이 클래스를 통하여 KoreanBots API와 top.gg API, UniqueBots API에 연결됩니다.
+
+    Parameters
+    ----------
+    koreanbots_token: Optional[str]
+        Koreanbots 에서 발급받은 봇의 토큰 키값 입니다. 해당 값을 설정하지 않을 경우 자동으로 활성화 되지 않습니다.
+    topgg_token: Optional[str]
+        Top.gg 에서 발급받은 봇의 토큰 키값 입니다. 해당 값을 설정하지 않을 경우 자동으로 활성화 되지 않습니다.
+    uniquebots_token: Optional[str]
+        UniqueBots 에서 발급받은 봇의 토큰 키값 입니다. 해당 값을 설정하지 않을 경우 자동으로 활성화 되지 않습니다.
+    session: Optional[aiohttp.ClientSession]
+        HttpClient 를 위한 aiohttp 의 ClientSession 클래스 입니다.
+        기본값은 None이며, 자동으로 ClientSession을 생성하게 됩니다.
+    loop: Optional[asyncio.AbstractEventLoop]
+        비동기를 사용하기 위한 asyncio.AbstractEventLoop 입니다.
+        기본값은 None 입니다.
+        기본 asyncio.AbstractEventLoop는 asyncio.get_event_loop()를 사용하여 얻습니다.
+    """
     def __init__(self,
                  loop: asyncio.AbstractEventLoop = None,
                  session: aiohttp.ClientSession = None,
@@ -56,6 +76,23 @@ class HttpClient:
             self.uniquebots_http = uniquebots.HttpClient(token=self.uniquebots_token, session=session, loop=loop)
 
     async def bot(self, bot_id: int, web_type: List[WebsiteType] = None):
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        봇 정보를 불러옵니다.
+
+        Parameters
+        ----------
+        bot_id: int
+            봇 ID 값이 포함됩니다.
+        web_type: Optional[list[WebsiteType]]
+            값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
+        Returns
+        -------
+        WebsiteBot:
+            웹사이트로 부터 들어온 봇 정보가 포함되어 있습니다.
+        """
         if web_type is None:
             web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         kbots = None
@@ -90,6 +127,26 @@ class HttpClient:
         return WebsiteStats(koreanbots=kbots, topgg=tbots, uniquebots=ubots)
 
     async def vote(self, bot_id: int, user_id: int, web_type: List[WebsiteType] = None):
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        `user_id`에 들어있는 사용자가 봇에 하트 혹은 투표를 누른 여부에 대하여 불러옵니다.
+
+        Parameters
+        ----------
+        bot_id: int
+            봇 ID 값이 포함됩니다.
+        user_id: int
+            유저 ID 값이 포함되어 있습니다.
+        web_type: Optional[List[WebsiteType]]
+            값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
+
+        Returns
+        -------
+        WebsiteVote:
+            웹사이트로 부터 들어온 사용자 투표 정보에 대한 정보가 포함되어 있습니다.
+        """
         if web_type is None:
             web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         kbots = None
@@ -107,6 +164,28 @@ class HttpClient:
         return WebsiteVote(koreanbots=kbots, topgg=tbots, uniquebots=ubots)
 
     async def votes(self, bot_id: int, web_type: List[WebsiteType] = None):
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        하트 혹은 투표를 누른 사용자 목록을 모두 불러옵니다.
+
+        Notes
+        -----
+        koreanbots 에서는 사용자 하트 목록을 불러오지 못합니다. topgg 혹은 uniquebots 모델만 사용이 가능합니다.
+
+        Parameters
+        ----------
+        bot_id: int
+            봇 ID 값이 포함됩니다.
+        web_type: Optional[List[WebsiteType]]
+            값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
+
+        Returns
+        -------
+        WebsiteVotes:
+            웹사이트로 부터 들어온 봇 하트 정보가 포함되어 있습니다.
+        """
         if web_type is None:
             web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         tbots = None
@@ -121,6 +200,24 @@ class HttpClient:
         return WebsiteVotes(topgg=tbots, uniquebots=ubots)
 
     async def users(self, user_id: int, web_type: List[WebsiteType] = None):
+        """
+        본 함수는 코루틴(비동기)함수 입니다.
+
+        사용자 정보를 불러옵니다.
+
+        Parameters
+        ----------
+        user_id: int
+            사용자 ID 값이 포함됩니다.
+        web_type: Optional[list[WebsiteType]]
+            값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
+            배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
+
+        Returns
+        -------
+        WebsiteUser
+            웹사이트로 부터 들어온 사용자 정보가 포함되어 있습니다.
+        """
         if web_type is None:
             web_type = [WebsiteType.koreanbots, WebsiteType.topgg, WebsiteType.uniquebots]
         kbots = None

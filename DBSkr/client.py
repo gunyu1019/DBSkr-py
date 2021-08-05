@@ -126,7 +126,7 @@ class Client:
         Parameters
         ----------
         bot_id: Optional[int]
-            봇 ID 값이 포함됩니다.
+            봇 ID 값이 포함됩니다. 봇 ID 값이 포함되질 않을 경우, 자신의 봇 ID가 들어갑니다.
         web_type: Optional[list[WebsiteType]]
             값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
             배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
@@ -154,7 +154,7 @@ class Client:
         ----------
         guild_count: Optional[int]
             서버 갯수가 포함되어 있습니다.
-        web_type: List[WebsiteType]
+        web_type: Optional[list[WebsiteType]]
             값을 보낼 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
             배열 안에 있는 웹사이트 유형에 따라 일부 웹사이트에만 발송합니다.
         Returns
@@ -174,9 +174,9 @@ class Client:
 
         Parameters
         ----------
-        user_id: Optional[int]
+        user_id: int
             유저 ID 값이 포함되어 있습니다.
-        web_type: List[WebsiteType]
+        web_type: Optional[list[WebsiteType]]
             값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
             배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
 
@@ -199,7 +199,7 @@ class Client:
 
         Parameters
         ----------
-        web_type: List[WebsiteType]
+        web_type: Optional[list[WebsiteType]]
             값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
             배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
 
@@ -220,7 +220,7 @@ class Client:
         ----------
         user_id: int
             사용자 ID 값이 포함됩니다.
-        web_type: List[WebsiteType]
+        web_type: Optional[list[WebsiteType]]
             값을 불러올 웹사이트를 선택하실 수 있습니다. 기본 값은 토큰 유/무에 따른 모든 웹클라이언트에 발송됩니다.
             배열 안에 있는 웹사이트 유형에 따라 일부 정보만 불러올 수 있습니다.
 

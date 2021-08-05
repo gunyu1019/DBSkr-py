@@ -33,7 +33,7 @@ from . import koreanbots
 from . import topgg
 from . import uniquebots
 
-from .assets import Assets, DiscordAvatar
+from .assets import Assets, DiscordAvatar, ImageURL
 from .client import Client
 from .enums import WebsiteType
 from .https import HttpClient

@@ -26,8 +26,15 @@ from typing import Optional
 from ..assets import DiscordAvatar
 
 
-class Bot:
+class BaseUniqueBots:
     def __init__(self, data: dict):
+        self.data: dict = data
+
+
+class Bot(BaseUniqueBots):
+    def __init__(self, data: dict):
+        super().__init__(data=data)
+
         from .enums import Status, get_value
         self.id: str = data.get("id")
         self.name: str = data.get("name")
@@ -65,8 +72,9 @@ class Bot:
         return self.name
 
 
-class Stats:
+class Stats(BaseUniqueBots):
     def __init__(self, data: dict):
+        super().__init__(data=data)
         self.guilds: int = data.get("guilds")
 
     def __eq__(self, other):
@@ -94,8 +102,10 @@ class Category:
         return not self.__eq__(other)
 
 
-class Vote:
+class Vote(BaseUniqueBots):
     def __init__(self, data: dict):
+        super().__init__(data=data)
+
         self.voted: bool = data.get("heartClicked")
 
     def __eq__(self, other):
@@ -105,8 +115,10 @@ class Vote:
         return not self.__eq__(other)
 
 
-class User:
+class User(BaseUniqueBots):
     def __init__(self, data: dict):
+        super().__init__(data=data)
+
         self.id: str = data.get("id")
         self.name: str = data.get("tag")
         self.desc: str = data.get("description")
