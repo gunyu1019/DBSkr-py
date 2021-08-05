@@ -93,7 +93,7 @@ class HttpClient:
         result = result.get("data", {}).get("bot")
         return Vote(result)
 
-    async def votes(self, bot_id: int) -> List[User]:
+    async def votes(self, bot_id: int) -> list:
         data = GraphQL(query="""{
                     bot (id: $bot_id) {
                         hearts {
@@ -119,7 +119,7 @@ class HttpClient:
         })
 
         result = await self.requests.requests(data)
-        result = result.get("data", {}).get("bot", {})
+        result = result.get("data", {}).get("bot", {}).get("hearts", [])
         return [User(user.get("from", {})) for user in result]
 
     async def users(self, user_id: int) -> User:
@@ -136,7 +136,7 @@ class HttpClient:
                 }""")
 
         data.set_variables({
-                    'user_id': str(user_id)
+            'user_id': str(user_id)
         })
 
         result = await self.requests.requests(data)
