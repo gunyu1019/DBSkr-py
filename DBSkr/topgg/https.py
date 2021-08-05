@@ -23,7 +23,7 @@ SOFTWARE.
 
 import aiohttp
 import asyncio
-from typing import Union, Sequence
+from typing import Union, Sequence, List
 
 from .api import Api
 from .models import Bot, Search, Stats, VotedUser, User, Vote
@@ -79,10 +79,10 @@ class HttpClient:
         result = await self.requests.get(path=path, query=data)
         return Vote(result)
 
-    async def votes(self, bot_id: int) -> VotedUser:
+    async def votes(self, bot_id: int) -> List[VotedUser]:
         path = "/bots/{bot_id}/votes".format(bot_id=bot_id)
         result = await self.requests.get(path=path)
-        return VotedUser(result)
+        return [VotedUser(user) for user in result]
 
     async def stats(self, bot_id: int,
                     guild_count: Union[int, list] = None,

@@ -27,6 +27,8 @@ import aiohttp
 from .api import Api, GraphQL
 from .models import Bot, Stats, Vote, User
 
+from typing import List
+
 
 class HttpClient:
     def __init__(self,
@@ -91,7 +93,7 @@ class HttpClient:
         result = result.get("data", {}).get("bot")
         return Vote(result)
 
-    async def votes(self, bot_id: int) -> list:
+    async def votes(self, bot_id: int) -> List[User]:
         data = GraphQL(query="""{
                     bot (id: $bot_id) {
                         hearts {
@@ -117,8 +119,8 @@ class HttpClient:
         })
 
         result = await self.requests.requests(data)
-        result = result.get("data", {}).get("bot")
-        return result
+        result = result.get("data", {}).get("bot", {})
+        return [User(user.get("from", {})) for user in result]
 
     async def users(self, user_id: int) -> User:
         data = GraphQL(query="""{
@@ -135,7 +137,7 @@ class HttpClient:
 
         data.set_variables({
                     'user_id': str(user_id)
-            })
+        })
 
         result = await self.requests.requests(data)
         result = result.get("data", {}).get("profile")
