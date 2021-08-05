@@ -24,10 +24,15 @@ from .. import errors
 
 
 class ClientException(Exception):
+    """ Client 값에서 값이 잘못 설정되었을 때 발생하는 예외 클래스 입니다."""
     pass
 
 
 class HTTPException(errors.HTTPException):
+    """
+    uniquebots.HttpClient의 대표 예외 클래스 입니다.
+    UniqueBots에 속한 모든 HttpClient가 핸들러 됩니다.
+    """
     def __init__(self, response, message):
         self.status = response.status
         if isinstance(message, dict):
@@ -38,4 +43,7 @@ class HTTPException(errors.HTTPException):
 
 
 class BadRequests(HTTPException, errors.BadRequests):
+    """ Bad Requests (400):
+     잘못된 피라미터가 입력되었을 경우에 발생하는 예외클래스 입니다.
+    """
     pass
