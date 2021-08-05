@@ -29,6 +29,7 @@ from .models import Category
 
 
 class Status(Enum):
+    """ 디스코드 봇의 상태"""
     online = "online"
     idle = "idle"
     dnd = "dnd"
@@ -36,6 +37,7 @@ class Status(Enum):
 
 
 class Categories(Enum):
+    """ UniqueBots 카테고리"""
     moderation = Category(category_id="moderation", name="관리")
     music = Category(category_id="music", name="음악")
     translation = Category(category_id="translation", name="번역")

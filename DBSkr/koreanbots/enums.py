@@ -26,17 +26,20 @@ from ..enums import get_value
 
 
 class WidgetType(Enum):
+    """ KoreanBots의 위젯 유형"""
     Vote = "votes"
     Server = "servers"
     Status = "status"
 
 
 class WidgetStyle(Enum):
+    """ KoreanBots의 위젯 스타일"""
     classic = "classic"
     flat = "flat"
 
 
 class Category(Enum):
+    """ KoreanBots 카테고리"""
     moderation = "관리"
     music = "뮤직"
     stats = "전적"
@@ -64,6 +67,7 @@ class Category(Enum):
 
 
 class Status(Enum):
+    """ 디스코드 봇의 상태"""
     online = "online"
     idle = "idle"
     dnd = "dnd"
@@ -72,6 +76,7 @@ class Status(Enum):
 
 
 class State(Enum):
+    """ KoreanBots에 등록된 디스코드 봇의 상태"""
     ok = "ok"
     reported = "reported"
     blocked = "blocked"
@@ -80,6 +85,7 @@ class State(Enum):
 
 
 class BotFlag(Enum):
+    """ 디스코드 봇의 Flag 값"""
     official = 1 << 0
     verification_bot = 1 << 2
     partner = 1 << 3
@@ -92,6 +98,7 @@ class BotFlag(Enum):
 
 
 class UserFlag(Enum):
+    """ 유저의 Flag 값"""
     staff = 1 << 0
     bug_hunter = 1 << 1
     bot_reviewer = 1 << 2

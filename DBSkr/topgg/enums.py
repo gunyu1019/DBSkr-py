@@ -25,6 +25,7 @@ from enum import Enum
 
 
 class WidgetType(Enum):
+    """ Top.gg의 위젯 유형"""
     normal = None
     status = "status"
     servers = "servers"
