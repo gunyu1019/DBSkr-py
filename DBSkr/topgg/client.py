@@ -164,7 +164,7 @@ class Client:
 
         Returns
         -------
-        List[User]:
+        List[VotedUser]:
             Top.gg로 부터 투표 누른 사용자 목록에 대한 정보가 포함되어 있습니다.
         """
         return await self.http.votes(bot_id=self.client.user.id)

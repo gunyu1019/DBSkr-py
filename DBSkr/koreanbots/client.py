@@ -217,7 +217,8 @@ class Client:
                bot_id: int = None,
                style: WidgetStyle = None,
                scale: float = None,
-               icon: bool = None) -> Widget:
+               icon: bool = None
+               ) -> Widget:
         """
         KoreanBots를 통하여 디스코드 봇의 위젯 값을 불러옵니다.
 
