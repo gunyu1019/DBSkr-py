@@ -38,6 +38,57 @@ class BaseKoreanBots:
 
 
 class Bot(BaseKoreanBots):
+    """ KoreanBots의 디스코드 봇 정보를 담아내는 모델입니다.
+
+    Attributes
+    ------------
+    id: str
+        디스코드 봇의 ID 입니다.
+    discriminator: str
+        디스코드 봇의 태그 입니다.
+    avatar: DiscordAvatar
+        디스코드 봇의 프로필 사진 입니다.
+    name: str
+        디스코드 봇의 이름 입니다.
+    flags: BotFlagModel
+        KoreanBots에 등재된 봇의 Flag 값 입니다.
+    library: str
+        디스코드 봇에 사용된 라이브러리 정보 입니다.
+    prefix: str
+        디스코드 봇의 접두어 입니다.
+    prefix: str
+        디스코드 봇의 접두어 입니다.
+    votes: int
+        KoreanBots에 등재된 봇에 대해 하트를 누른 갯수 입니다.
+    servers: int
+        디스코드 봇을 사용 중인 서버 갯수 입니다.
+    intro: str
+        디스코드 봇의 간단한 소개문 입니다.
+    desc: str
+        디스코드 봇의 설명문 입니다.
+    categories: List[Category]
+        디스코드 봇의 카테고리 입니다.
+    status: Status
+        디스코드 봇의 상태 입니다.
+    state: State
+        KoreanBots에 등재된 봇의 상태 입니다.
+    owners: List[Union[User, str]]
+        디스코드 봇의 소유자입니다.
+    website: Optional[str]
+        디스코드 봇의 웹사이트입니다.
+    github: Optional[str]
+        디스코드 봇의 깃허브입니다.
+    invite: Optional[str]
+        디스코드 봇의 초대링크입니다.
+    support: Optional[str]
+        디스코드 봇의 서포트 서버 초대링크입니다.
+    vanity: Optional[str]
+        디스코드 봇의 VANITY 주소 입니다.
+    background: Optional[ImageURL]
+        디스코드 봇의 백그라운드 사진입니다.
+    banner: Optional[ImageURL]
+        디스코드 봇의 배너입니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data)
 
@@ -81,6 +132,19 @@ class Bot(BaseKoreanBots):
 
 
 class Bots(BaseKoreanBots):
+    """ KoreanBots의 검색된 정보값이 포함되어 있습니다.
+
+    Attributes
+    ------------
+    type: str
+        검색 유형입니다.
+    current: int
+        현재 페이지를 나타냅니다.
+    total: int
+        검색된 모든 페이지를 나타냅니다.
+    results: List[Bot]
+        검색된 결과가 들어있습니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data)
         self.type: str = data.get("data", {}).get("type")
@@ -98,12 +162,28 @@ class Bots(BaseKoreanBots):
 
 
 class Stats(BaseKoreanBots):
+    """ KoreanBots에 디스코드 봇 정보를 반영한 후 반환되는 값입니다.
+
+    Attributes
+    ------------
+    message: str
+        KoreanBots에서 회신한 메세지입니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data)
         self.message: str = data.get("message")
 
 
 class Vote(BaseKoreanBots):
+    """ KoreanBots에 하트 정보에 대한 값입니다.
+
+    Attributes
+    ------------
+    voted: bool
+        하트 여부를 반환합니다.
+    last_vote: datetime
+        마지막으로 하트를 준 시간을 반환합니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data)
 
@@ -120,6 +200,23 @@ class Vote(BaseKoreanBots):
 
 
 class User(BaseKoreanBots):
+    """ KoreanBots에 등록된 사용자 정보에 대한 값입니다.
+
+    Attributes
+    ------------
+    id: str
+        사용자의 ID 입니다.
+    discriminator: str
+        사용자의 태그 입니다.
+    name: str
+        사용자의 이름 입니다.
+    github: Optional[str]
+        사용자의 깃허브 입니다.
+    bots: List[Union[Bot, dict]]
+        사용자가 소유하고 있는 디스코드 봇입니다.
+    flags: UserFlagModel
+        KoreanBots에 등록된 사용자의 Flag 값 입니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data)
 

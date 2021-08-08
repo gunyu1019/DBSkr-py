@@ -32,6 +32,49 @@ class BaseUniqueBots:
 
 
 class Bot(BaseUniqueBots):
+    """ UniqueBots의 디스코드 봇 정보를 담아내는 모델입니다.
+
+    Attributes
+    ------------
+    id: str
+        디스코드 봇의 ID 입니다.
+    avatar: DiscordAvatar
+        디스코드 봇의 프로필 사진 입니다.
+    name: str
+        디스코드 봇의 이름 입니다.
+    library: str
+        디스코드 봇에 사용된 라이브러리 정보 입니다.
+    prefix: str
+        디스코드 봇의 접두어 입니다.
+    prefix: str
+        디스코드 봇의 접두어 입니다.
+    trusted: bool
+        디스코드 봇을 신뢰할 수 있는 유/무를 반환합니다.
+    verified: bool
+        디스코드 봇이 인증되었다는 유/무를 반환합니다.
+    servers: int
+        디스코드 봇을 사용 중인 서버 갯수 입니다.
+    intro: str
+        디스코드 봇의 간단한 소개문 입니다.
+    desc: str
+        디스코드 봇의 설명문 입니다.
+    status: Status
+        디스코드 봇의 상태 입니다.
+    premium: bool
+        UniqueBots에서 프리미엄 해텍을 받고 있는 유/무를 반환힙니다.
+    owners: List[Union[User, str]]
+        디스코드 봇의 소유자입니다.
+    website: Optional[str]
+        디스코드 봇의 웹사이트입니다.
+    github: Optional[str]
+        디스코드 봇의 깃허브입니다.
+    invite: Optional[str]
+        디스코드 봇의 초대링크입니다.
+    support: Optional[str]
+        디스코드 봇의 서포트 서버 초대링크입니다.
+    slug: Optional[str]
+        디스코드 봇의 slug값 입니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data=data)
 
@@ -40,7 +83,7 @@ class Bot(BaseUniqueBots):
         self.name: str = data.get("name")
         self.trusted: bool = data.get("trusted")
         self.verified: bool = data.get("discordVerified")
-        self.guild_count: int = data.get("guilds")
+        self.servers: int = data.get("guilds")
         self.status: Status = get_value(Status, data.get("status"))
         self.intro: str = data.get("brief")
         self.desc: str = data.get("description")
@@ -73,6 +116,13 @@ class Bot(BaseUniqueBots):
 
 
 class Stats(BaseUniqueBots):
+    """ UniqueBots에 디스코드 봇 정보를 반영한 후 반환되는 값입니다.
+
+    Attributes
+    ------------
+    guilds: int
+        디스코드 봇의 서버 갯수 입니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data=data)
         self.guilds: int = data.get("guilds")
@@ -103,6 +153,13 @@ class Category:
 
 
 class Vote(BaseUniqueBots):
+    """ UniqueBots에 하트 정보에 대한 값입니다.
+
+    Attributes
+    ------------
+    voted: bool
+        하트 여부를 반환합니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data=data)
 
@@ -116,6 +173,23 @@ class Vote(BaseUniqueBots):
 
 
 class User(BaseUniqueBots):
+    """ UniqueBots에 등록된 사용자 정보에 대한 값입니다.
+
+    Attributes
+    ------------
+    id: str
+        사용자의 ID 입니다.
+    desc: str
+        사용자에 대한 설명입니다.
+    name: str
+        사용자의 이름 입니다. 태그와 함께 불러와 집니다.
+    admin: bool
+        사용자가 관리자가 인지 아닌지 확인합니다.
+    bots: List[Union[Bot, dict]]
+        사용자가 소유하고 있는 디스코드 봇입니다.
+    avatar: DiscordAvatar
+        사용자의 프로필 사진입니다.
+    """
     def __init__(self, data: dict):
         super().__init__(data=data)
 
