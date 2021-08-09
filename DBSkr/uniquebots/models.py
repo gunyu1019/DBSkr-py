@@ -46,10 +46,8 @@ class Bot(BaseUniqueBots):
         디스코드 봇에 사용된 라이브러리 정보 입니다.
     prefix: str
         디스코드 봇의 접두어 입니다.
-    prefix: str
-        디스코드 봇의 접두어 입니다.
     trusted: bool
-        디스코드 봇을 신뢰할 수 있는 유/무를 반환합니다.
+        UniqueBots에서 해당 디스코드 봇을 신뢰할 수 있는 유/무를 반환합니다.
     verified: bool
         디스코드 봇이 인증되었다는 유/무를 반환합니다.
     servers: int
@@ -64,6 +62,8 @@ class Bot(BaseUniqueBots):
         UniqueBots에서 프리미엄 해텍을 받고 있는 유/무를 반환힙니다.
     owners: List[Union[User, str]]
         디스코드 봇의 소유자입니다.
+    votes: List[Union[User, str]]
+        UniqueBots에 등재된 봇에 대해 하트를 사용자 목록 입니다.
     website: Optional[str]
         디스코드 봇의 웹사이트입니다.
     github: Optional[str]
@@ -73,7 +73,7 @@ class Bot(BaseUniqueBots):
     support: Optional[str]
         디스코드 봇의 서포트 서버 초대링크입니다.
     slug: Optional[str]
-        디스코드 봇의 slug값 입니다.
+        디스코드 봇의 slug 값 입니다.
     """
     def __init__(self, data: dict):
         super().__init__(data=data)
@@ -92,6 +92,7 @@ class Bot(BaseUniqueBots):
         self.premium: bool = data.get("premium")
 
         self.owners = [User(i) if 'tag' in i else i.get("id") for i in data.get("owners")]
+        self.votes = [User(i.get("from")) if "tag" in i.get("from") else i.get("from") for i in data.get("hearts", [])]
 
         # Optional Data
         self.invite: Optional[str] = data.get("invite")

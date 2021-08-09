@@ -33,6 +33,59 @@ class BaseTopgg:
 
 
 class Bot(BaseTopgg):
+    """ KoreanBots의 디스코드 봇 정보를 담아내는 모델입니다.
+
+    Attributes
+    ------------
+    id: str
+        디스코드 봇의 ID 입니다.
+    discriminator: str
+        디스코드 봇의 태그 입니다.
+    avatar: DiscordAvatar
+        디스코드 봇의 프로필 사진 입니다.
+    name: str
+        디스코드 봇의 이름 입니다.
+    library: str
+        디스코드 봇에 사용된 라이브러리 정보 입니다.
+    prefix: str
+        디스코드 봇의 접두어 입니다.
+    votes: int
+        Top.gg에 등재된 봇에 대해 투표를 누른 갯수 입니다.
+    servers: int
+        디스코드 봇을 사용 중인 서버 갯수 입니다.
+    shard_count: int
+        디스코드 봇 샤드 갯수 입니다.
+    month_votes: int
+        Top.gg에 등재된 봇에 대해 투표를 누른 갯수 입니다. (한달 마다 갱신됩니다.)
+    representative_guilds: str
+        디스코드 봇이 대표하는 서버입니다.
+    intro: str
+        디스코드 봇의 간단한 소개문 입니다.
+    desc: str
+        디스코드 봇의 설명문 입니다.
+    date: str
+        Top.gg에 디스코드 봇이 등재된 날짜 입니다.
+    categories: List[Category]
+        디스코드 봇의 카테고리 입니다.
+    owners: List[Union[User, str]]
+        디스코드 봇의 소유자입니다.
+    website: Optional[str]
+        디스코드 봇의 웹사이트입니다.
+    github: Optional[str]
+        디스코드 봇의 깃허브입니다.
+    invite: Optional[str]
+        디스코드 봇의 초대링크입니다.
+    support: Optional[str]
+        디스코드 봇의 서포트 서버 초대링크입니다.
+    vanity: Optional[str]
+        디스코드 봇의 VANITY 주소 입니다.
+    donate: str
+        디스코드 봇의 후원 ID입니다.
+    avatar_hash: Optional[str]
+        디스코드 봇의 아바타 해시값 입니다.
+    verified: bool
+        디스코드 봇이 인증되었다는 유/무를 반환합니다.
+    """
     def __init__(self, data):
         super().__init__(data)
         self.id: str = data.get("id", data.get("clientid"))
@@ -45,16 +98,16 @@ class Bot(BaseTopgg):
         self.desc: str = data.get("longdesc")
         self.categories: list = data.get("tag")
         self.owners: list = data.get("owners")
-        self.guilds: list = data.get("guilds")
+        self.representative_guilds: list = data.get("guilds")
         self.date: datetime = datetime.fromisoformat(data.get("date", "1970-01-01T00:00:00").strip("Z"))
-        self.certified: bool = data.get("certifiedBot")
+        self.verified: bool = data.get("certifiedBot")
         self.vanity: Optional[str] = data.get("vanity")
-        self.points: int = data.get("points")
-        self.month_points: int = data.get("monthlyPoints")
+        self.votes: int = data.get("points")
+        self.month_votes: int = data.get("monthlyPoints")
         self.donate: str = data.get("donatebotguildid")
 
         self.shard_count: Optional[int] = data.get("shard_count")
-        self.guild_count: Optional[int] = data.get("server_count")
+        self.servers: Optional[int] = data.get("server_count")
 
         # Optional
         self.avatar_hash: Optional[str] = data.get("avatar")
@@ -74,14 +127,32 @@ class Bot(BaseTopgg):
 
 
 class Stats(BaseTopgg):
+    """ Top.gg에 디스코드 봇 정보를 반영한 후 반환되는 값입니다.
+
+    Attributes
+    ------------
+    servers: int
+        디스코드 봇을 사용 중인 서버 갯수 입니다.
+    shards: list
+        디스코드 봇의 샤드 ID 값입니다.
+    shard_count: int
+        디스코드 봇 샤드 갯수 입니다.
+    """
     def __init__(self, data):
         super().__init__(data)
-        self.guild_count: Optional[int] = data.get("server_count")
+        self.servers: Optional[int] = data.get("server_count")
         self.shards: Optional[list] = data.get("shards")
         self.shard_count: Optional[int] = data.get("shard_count")
 
 
 class Vote(BaseTopgg):
+    """ Top.gg에 하트 정보에 대한 값입니다.
+
+    Attributes
+    ------------
+    voted: bool
+        하트 여부를 반환합니다.
+    """
     def __init__(self, data):
         super().__init__(data)
         self.voted: bool = data.get("voted")
@@ -94,6 +165,21 @@ class Vote(BaseTopgg):
 
 
 class Search(BaseTopgg):
+    """ Top.gg에 검색 정보에 대한 값입니다.
+
+    Attributes
+    ------------
+    results: List[Bot]
+        검색된 디스코드 봇의 이름이 포함됩니다.
+    count: int
+        한 페이지에 검색된 디스코드 봇들의 갯수 입니다.
+    total: int
+        검색된 총 페이지 입니다.
+    limit: int
+        불러올 봇의 양의 갯수가 포함됩니다.
+    offset: int
+        건너 뛸 디스코드 봇의 갯수가 포함됩니다.
+    """
     def __init__(self, data):
         super().__init__(data)
         self.results: list = [Bot(i) for i in data.get("results")]
@@ -107,6 +193,47 @@ class Search(BaseTopgg):
 
 
 class User(BaseTopgg):
+    """ Top.gg에 등록된 사용자 정보에 대한 값입니다.
+
+    Attributes
+    ------------
+    id: str
+        사용자의 ID 입니다.
+    discriminator: str
+        사용자의 태그 입니다.
+    name: str
+        사용자의 이름 입니다.
+    avatar: DiscordAvatar
+        디스코드 봇의 프로필 사진 입니다.
+    github: Optional[str]
+        사용자의 깃허브 입니다.
+    youtube: Optional[str]
+        사용자의 유튜브 입니다.
+    reddit: Optional[str]
+        사용자의 레딧 입니다.
+    twitter: Optional[str]
+        사용자의 트위터 입니다.
+    instagram: Optional[str]
+        사용자의 인스타그램 주소 입니다.
+    bio: Optional[str]
+        사용자의 bio 정보입니다.
+    banner: Optional[str]
+        사용자의 배너 주소입니다.
+    avatar_hash: Optional[str]
+        사용자의 아바타 해시값 입니다.
+    color: Optional[str]
+        사용자의 고유 색상값 입니다.
+    staff: bool
+        사용자가 스태프인지 확인합니다.
+    web_mod: bool
+        사용자가 웹 모더레이터인지 확인합니다.
+    mod: bool
+        사용자가 모더레이터인지 확인합니다.
+    certified: bool
+        인증된 사용자인지 확인합니다.
+    supporter: bool
+        사용자가 서포터인지 확인합니다.
+    """
     def __init__(self, data):
         super().__init__(data)
         self.id: str = data.get("id")
@@ -137,6 +264,17 @@ class User(BaseTopgg):
 
 
 class VotedUser(BaseTopgg):
+    """ 투표한 사용자에 대한 값입니다.
+
+    Attributes
+    ------------
+    id: str
+        사용자의 ID 입니다.
+    name: str
+        사용자의 이름 입니다.
+    avatar: DiscordAvatar
+        디스코드 봇의 프로필 사진 입니다.
+    """
     def __init__(self, data):
         super().__init__(data)
         self.name: str = data.get("username")
