@@ -197,3 +197,6 @@ async def on_ready():
     
 client.run('Discord 토큰')
 ```
+
+## 라이센스(License)
+DBSkr의 라이센스는 [MIT License](LICENSE)를 부여합니다.
