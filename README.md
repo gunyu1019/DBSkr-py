@@ -20,7 +20,7 @@
 디스코드봇 홍보 사이트를 추가지원을 하기 위해선 gunyu1019@yhs.kr로 문의해주시기 바랍니다.
 
 ## 설치 (Installation)
-파이썬 3.6 혹은 그 이상의 버전이 필요합니다.
+파이썬 3.7 혹은 그 이상의 버전이 필요합니다.
 **Install via pip (recommended)**
 ```
 # Linux/macOS
