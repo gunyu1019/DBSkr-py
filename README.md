@@ -5,6 +5,7 @@
 <p align="center">
     <a href="https://www.codefactor.io/repository/github/gunyu1019/dbskr-py"><img src="https://www.codefactor.io/repository/github/gunyu1019/dbskr-py/badge" alt="CodeFactor" /></a>
     <a href="https://www.codacy.com/gh/gunyu1019/DBSkr-py/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gunyu1019/DBSkr-py&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/8b2a0f3270994feba873554ecc922531" alt="DBSkr"/></a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fgunyu1019%2FDBSkr-py?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgunyu1019%2FDBSkr-py.svg?type=shield"/></a>
     <a href="https://pypistats.org/packages/DBSkr"><img src="https://img.shields.io/pypi/dm/DBSkr" alt="PyPi Downloading" /></a>
     <a href="https://pypi.org/project/DBSkr"><img src="https://img.shields.io/pypi/v/DBSkr" alt="PyPi Version" /></a>
     <a href="https://pypi.org/project/DBSkr"><img src="https://img.shields.io/pypi/pyversions/DBSkr" alt="PyPi Version" /></a>
@@ -200,3 +201,6 @@ client.run('Discord 토큰')
 
 ## 라이센스(License)
 DBSkr의 라이센스는 [MIT License](LICENSE)를 부여합니다.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgunyu1019%2FDBSkr-py.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgunyu1019%2FDBSkr-py?ref=badge_large)
