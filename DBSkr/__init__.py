@@ -36,6 +36,7 @@ from . import uniquebots
 from .assets import Assets, DiscordAvatar, ImageURL
 from .client import Client
 from .enums import WebsiteType
+from .errors import *
 from .https import HttpClient
 from .models import *
 
