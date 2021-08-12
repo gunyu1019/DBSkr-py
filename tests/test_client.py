@@ -6,4 +6,4 @@ import os
 @pytest.mark.asyncio
 async def test_client():
     print(os.environ.get('KEY'))
-    return os.environ.get('KEY') is None
+    return os.environ.get('KEY') is not None
