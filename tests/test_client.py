@@ -5,4 +5,5 @@ import os
 
 @pytest.mark.asyncio
 async def test_client():
-    return os.getenv("korean_bots_token") is None
+    print(os.getenv("KEY"))
+    return os.getenv("KEY") is None
