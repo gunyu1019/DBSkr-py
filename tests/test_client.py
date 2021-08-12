@@ -5,4 +5,4 @@ import os
 
 @pytest.mark.asyncio
 async def test_client():
-    raise TypeError(os.environ.get('KEY'))
+    raise TypeError(len(os.environ.get('KEY')))
