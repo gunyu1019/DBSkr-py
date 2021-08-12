@@ -21,8 +21,8 @@ async def check_client(func, **kwargs):
 async def test_client():
     exception = []
     client = DBSkr.HttpClient(
-        koreanbots_token=os.environ.get('KOREAN_BOTS_TOKEN'),
-        uniquebots_token=os.environ.get('UNIQUE_BOTS_TOKEN')
+        # koreanbots_token=os.environ.get('KOREAN_BOTS_TOKEN'),
+        # uniquebots_token=os.environ.get('UNIQUE_BOTS_TOKEN')
     )
 
     result = await check_client(client.bot, bot_id=680694763036737536)
