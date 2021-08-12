@@ -1,6 +1,7 @@
 import pytest
-import DBSkr
 import os
+
+import DBSkr
 
 
 async def check_client(func, **kwargs):
@@ -20,8 +21,8 @@ async def check_client(func, **kwargs):
 async def test_client():
     exception = []
     client = DBSkr.HttpClient(
-        koreanbots_token=os.environ.get('KOREAN_BOTS_TOKEN'),
-        uniquebots_token=os.environ.get('UNIQUE_BOTS_TOKEN')
+        # koreanbots_token=os.environ.get('KOREAN_BOTS_TOKEN'),
+        # uniquebots_token=os.environ.get('UNIQUE_BOTS_TOKEN')
     )
 
     result = await check_client(client.bot, bot_id=680694763036737536)
@@ -33,7 +34,7 @@ async def test_client():
     result = await check_client(client.votes, bot_id=680694763036737536)
     if result is not None:
         exception.append(result)
-    result = await check_client(client.users, user_id=340373909339635726)
+    result = await check_client(client.users, user_id=340373909339635725)
     if result is not None:
         exception.append(result)
 
