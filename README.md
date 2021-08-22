@@ -18,7 +18,8 @@
 * [한국 디스코드봇 리스트(Koreanbots)](https://koreanbots.dev)
 * [Discord Bot List(topgg)](https://top.gg)
 * [UniqueBots](https://uniquebots.kr/)
-디스코드봇 홍보 사이트를 추가지원을 하기 위해선 gunyu1019@yhs.kr로 문의해주시기 바랍니다.
+
+디스코드 봇 홍보 사이트의 지원을 요청하고자 한다면, [이슈](https://github.com/gunyu1019/DBSkr-py/issues)로 올려주세요.
 
 ## 설치 (Installation)
 파이썬 3.7 혹은 그 이상의 버전이 필요합니다.
