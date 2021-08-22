@@ -35,10 +35,10 @@ py -3 -m pip install DBSkr
 **Install from source**
 ```
 # Linux/macOS
-python -3 -m pip install git+https://github.com/gunyu1019/DBSkr
+python -3 -m pip install git+https://github.com/gunyu1019/DBSkr-py
 
 # Windows
-py -3 -m pip install git+https://github.com/gunyu1019/DBSkr
+py -3 -m pip install git+https://github.com/gunyu1019/DBSkr-py
 ```
 
 ## 로깅 (Logging)
