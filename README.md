@@ -13,14 +13,16 @@
 
 한국 디스코드봇을 모아두는 사이트(들)을 위하여 제작된 비공식 파이썬 레퍼(Python3 Wapper) 입니다.
 
-> **더 이상 DBSkr-py의 지원은 없을 예정입니다.**
-> 가능한 공식 SDK를 이용해주시길 부탁드립니다.
+> **더 이상 DBSkr-py의 지원은 없을 예정입니다.**<br/>
+> 가능한 공식 SDK를 이용해주시길 부탁드립니다.<br/>
 
 **<지원하는 웹사이트 목록>**<br/>
 아래의 사이트를 해당 모듈을 통하여 한 번에 관리&사용 하실 수 있습니다.
 * [한국 디스코드봇 리스트(Koreanbots)](https://koreanbots.dev)
 * [Discord Bot List(topgg)](https://top.gg)
 * [UniqueBots](https://uniquebots.kr/)
+
+> 일부 SDK는 지원을 중단했습니다. 따라서 정상작동하지 않을 수 있습니다!
 
 디스코드 봇 홍보 사이트의 지원을 요청하고자 한다면, [이슈](https://github.com/gunyu1019/DBSkr-py/issues)로 올려주세요.
 
